@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -15,11 +16,12 @@ public class HomePage extends AppCompatActivity {
     Button btnLogOut;
     FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
-    ImageView imageView = findViewById(R.id.imageview1);
-    String url;
+    ImageView imageView;
+    String url = "https://media.giphy.com/media/3xz2BCohVTd7h2Kvfi/giphy.gif";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
 
 
         super.onCreate(savedInstanceState);
@@ -34,12 +36,10 @@ public class HomePage extends AppCompatActivity {
                 startActivity(inToSignUp);
             }
         });
-    }
-    private void loadImageByInternetURL() {
-
+        imageView = findViewById(R.id.imageView);
         Glide
                 .with(this)
-                .asGif()
+                .load(url)
                 .into(imageView);
     }
 }
