@@ -16,7 +16,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class MainActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
     EditText emailID, password;
     Button btnSignUp;
     TextView tvSignIn;
@@ -37,27 +37,27 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String email = emailID.getText().toString();
                 String passwordEntry = password.getText().toString();
-                if (email.isEmpty()) {
-                    emailID.setError("Please enter an email");
+                if (email.isEmpty() && passwordEntry.isEmpty()) {
+                    Toast.makeText(RegisterActivity.this, "Fields are empty", Toast.LENGTH_SHORT).show();
+                } else if (email.isEmpty()) {
+                    emailID.setError("Please enter an GT email");
                     emailID.requestFocus();
                 } else if (passwordEntry.isEmpty()) {
                     password.setError("Password enter a password");
                     password.requestFocus();
-                } else if (email.isEmpty() && passwordEntry.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Fields are empty", Toast.LENGTH_SHORT).show();
-                } else if (!(email.isEmpty() && passwordEntry.isEmpty())) {
-                    mFirebaseAuth.createUserWithEmailAndPassword(email, passwordEntry).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                } else if (email.split("@")[1].equals("gatech.edu")){
+                    Toast.makeText(RegisterActivity.this, "Please enter an GT email, not other emails", Toast.LENGTH_SHORT).show();
+                } else {
+                    mFirebaseAuth.createUserWithEmailAndPassword(email, passwordEntry).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (!task.isSuccessful()) {
-                                Toast.makeText(MainActivity.this, "Sign up unsuccessful. Try again!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(RegisterActivity.this, "Sign up unsuccessful. Try again!", Toast.LENGTH_SHORT).show();
                             } else {
-                                startActivity(new Intent(MainActivity.this, HomePage.class));
+                                startActivity(new Intent(RegisterActivity.this, HomePage.class));
                             }
                         }
                     });
-                } else {
-                    Toast.makeText(MainActivity.this, "Error Occurred!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         tvSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                Intent i = new Intent(RegisterActivity.this, LoginActivity.class);
                 startActivity(i);
             }
         });

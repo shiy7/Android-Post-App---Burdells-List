@@ -8,9 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 public class HomePage extends AppCompatActivity {
     Button btnLogOut;
@@ -40,7 +38,7 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
-                Intent inToSignUp = new Intent(HomePage.this, MainActivity.class);
+                Intent inToSignUp = new Intent(HomePage.this, RegisterActivity.class);
                 startActivity(inToSignUp);
             }
         });
