@@ -11,4 +11,5 @@ public class BuyTextBooksActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buy_text_books);
     }
+
 }
