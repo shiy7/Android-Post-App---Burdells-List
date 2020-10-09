@@ -33,11 +33,11 @@
             android:text="Textbook 3 condition = New" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/Back"
             android:layout_width="234dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|center_horizontal"
-            android:text="Button" />
+            android:text="Back" />
 
         <Button
             android:id="@+id/button5"
