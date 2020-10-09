@@ -29,7 +29,7 @@ public class HomePage extends AppCompatActivity {
         btnTextBookBuying.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent buyTextbook = new Intent(HomePage.this, BuyTextBooks.class);
+                Intent buyTextbook = new Intent(HomePage.this, BuyTextBooksActivity.class);
                 startActivity(buyTextbook);
             }
         });
