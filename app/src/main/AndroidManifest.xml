@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".BuyTextBooksActivity"></activity>
+        <activity android:name=".BuyTextBooksActivity" />
         <activity android:name=".HomePage" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity">
