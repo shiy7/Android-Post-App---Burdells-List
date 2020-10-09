@@ -46,7 +46,6 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(i);
                 } else {
                     Toast.makeText(LoginActivity.this, "Please Login", Toast.LENGTH_SHORT).show();
-
                 }
             }
         };
@@ -69,7 +68,6 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 Toast.makeText(LoginActivity.this, "Login Error, Login Again", Toast.LENGTH_SHORT).show();
-
                             } else {
                                 Intent intToHome = new Intent(LoginActivity.this, HomePage.class);
                                 startActivity(intToHome);

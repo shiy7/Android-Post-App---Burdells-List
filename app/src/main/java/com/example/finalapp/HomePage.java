@@ -14,6 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class HomePage extends AppCompatActivity {
     Button btnLogOut;
+    Button btnTextBookBuying;
     FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     ImageView imageView;
@@ -21,13 +22,20 @@ public class HomePage extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-        btnLogOut = findViewById(R.id.button2);
+        // Buy Textbooks Category
+        btnTextBookBuying = findViewById(R.id.Textbooks);
+        btnTextBookBuying.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent buyTextbook = new Intent(HomePage.this, BuyTextBooks.class);
+                startActivity(buyTextbook);
+            }
+        });
 
+        // Log Out of the application
+        btnLogOut = findViewById(R.id.LogoutButton);
         btnLogOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -36,10 +44,6 @@ public class HomePage extends AppCompatActivity {
                 startActivity(inToSignUp);
             }
         });
-        imageView = findViewById(R.id.imageView);
-        Glide
-                .with(this)
-                .load(url)
-                .into(imageView);
     }
+
 }
