@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
-                if (mFirebaseUser != null) {
+                if (mFirebaseUser != null && mFirebaseUser.isEmailVerified()) {
                     Toast.makeText(LoginActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
                     Intent i = new Intent(LoginActivity.this, HomePage.class);
                     startActivity(i);
@@ -49,33 +49,38 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         };
+
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String email = emailID.getText().toString();
                 String passwordEntry = password.getText().toString();
-                if (email.isEmpty()) {
+                if (email.isEmpty() && passwordEntry.isEmpty()) {
+                    Toast.makeText(LoginActivity.this, "Fields are empty", Toast.LENGTH_SHORT).show();
+                } else if (email.isEmpty()) {
                     emailID.setError("Please enter an email");
                     emailID.requestFocus();
                 } else if (passwordEntry.isEmpty()) {
                     password.setError("Password enter a password");
                     password.requestFocus();
-                } else if (email.isEmpty() && passwordEntry.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Fields are empty", Toast.LENGTH_SHORT).show();
-                } else if (!(email.isEmpty() && passwordEntry.isEmpty())) {
-                    mFirebaseAuth.signInWithEmailAndPassword(email, passwordEntry).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                } else {
+                    mFirebaseAuth.signInWithEmailAndPassword(email, passwordEntry)
+                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, "Login Error, Login Again", Toast.LENGTH_SHORT).show();
+                                if (mFirebaseAuth.getCurrentUser().isEmailVerified()){
+                                    startActivity(new Intent(LoginActivity.this, HomePage.class));
+                                } else {
+                                    Toast.makeText(LoginActivity.this, "Please verify your email address",
+                                            Toast.LENGTH_SHORT).show();
+                                }
                             } else {
-                                Intent intToHome = new Intent(LoginActivity.this, HomePage.class);
-                                startActivity(intToHome);
+                                Toast.makeText(LoginActivity.this, "Email/Password wrong. Please try again",
+                                        Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-                } else {
-                    Toast.makeText(LoginActivity.this, "Error Occurred!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
