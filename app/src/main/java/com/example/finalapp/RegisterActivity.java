@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,6 +33,7 @@ public class RegisterActivity extends AppCompatActivity {
         password = findViewById(R.id.etPassword);
         tvSignIn = findViewById(R.id.textView3);
         btnSignUp = findViewById(R.id.button);
+
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -45,7 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if (passwordEntry.isEmpty()) {
                     password.setError("Password enter a password");
                     password.requestFocus();
-                } else if (email.split("@")[1].equals("gatech.edu")){
+                } else if (!(email.split("@")[1].equals("gatech.edu"))){
                     Toast.makeText(RegisterActivity.this, "Please enter an GT email, not other emails", Toast.LENGTH_SHORT).show();
                 } else {
                     mFirebaseAuth.createUserWithEmailAndPassword(email, passwordEntry).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
@@ -54,10 +56,25 @@ public class RegisterActivity extends AppCompatActivity {
                             if (!task.isSuccessful()) {
                                 Toast.makeText(RegisterActivity.this, "Sign up unsuccessful. Try again!", Toast.LENGTH_SHORT).show();
                             } else {
-                                startActivity(new Intent(RegisterActivity.this, HomePage.class));
+                                mFirebaseAuth.getCurrentUser().sendEmailVerification()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+                                                    Toast.makeText(RegisterActivity.this,
+                                                            "Registered successfully. Please check your email for verification",
+                                                            Toast.LENGTH_SHORT).show();
+                                                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                                                } else {
+                                                    Toast.makeText(RegisterActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                                }
+                                            }
+                                        });
+
                             }
                         }
                     });
+
                 }
             }
         });

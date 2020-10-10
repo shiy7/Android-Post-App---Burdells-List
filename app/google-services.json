@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "878442750810",
-    "firebase_url": "https://firstassignment-d72a2.firebaseio.com",
-    "project_id": "firstassignment-d72a2",
-    "storage_bucket": "firstassignment-d72a2.appspot.com"
+    "project_number": "624032434427",
+    "firebase_url": "https://burdells.firebaseio.com",
+    "project_id": "burdells",
+    "storage_bucket": "burdells.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:878442750810:android:9032f5e746ed4dd8c84963",
+        "mobilesdk_app_id": "1:624032434427:android:1e8c43f30ace4ed8b3c85e",
         "android_client_info": {
           "package_name": "com.example.finalapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "878442750810-qsq5rrhh4jelesliagkjmn0dn5usogg1.apps.googleusercontent.com",
+          "client_id": "624032434427-dr29doh2dd2l45sh0mci9oc573jr8utl.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAQ6GqUXjuO-C7kVN1hs-lDfazVcOJMX8o"
+          "current_key": "AIzaSyDKOxKteZ9K1EH7i-U3GKD9Oyg4D0pX51I"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "878442750810-qsq5rrhh4jelesliagkjmn0dn5usogg1.apps.googleusercontent.com",
+              "client_id": "624032434427-dr29doh2dd2l45sh0mci9oc573jr8utl.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
