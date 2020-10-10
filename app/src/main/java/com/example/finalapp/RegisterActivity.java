@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,7 +17,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterActivity extends AppCompatActivity {
-    EditText emailID, password;
+    EditText emailID, password, userName, confirm;
     Button btnSignUp;
     TextView tvSignIn;
     FirebaseAuth mFirebaseAuth;
@@ -26,11 +25,13 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_register);
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         emailID = findViewById(R.id.editTextTextEmailAddress);
+
         password = findViewById(R.id.etPassword);
+        confirm = findViewById(R.id.cfPassword);
         tvSignIn = findViewById(R.id.textView3);
         btnSignUp = findViewById(R.id.button);
 
@@ -39,6 +40,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String email = emailID.getText().toString();
                 String passwordEntry = password.getText().toString();
+                String cfPassword = confirm.getText().toString();
                 if (email.isEmpty() && passwordEntry.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Fields are empty", Toast.LENGTH_SHORT).show();
                 } else if (email.isEmpty()) {
@@ -47,8 +49,10 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if (passwordEntry.isEmpty()) {
                     password.setError("Password enter a password");
                     password.requestFocus();
-                } else if (!(email.split("@")[1].equals("gatech.edu"))){
+                } else if (!(email.split("@")[1].equals("gatech.edu"))) {
                     Toast.makeText(RegisterActivity.this, "Please enter an GT email, not other emails", Toast.LENGTH_SHORT).show();
+                } else if (!cfPassword.equals(passwordEntry)){
+                    Toast.makeText(RegisterActivity.this, "Password not match, please try again", Toast.LENGTH_SHORT).show();
                 } else {
                     mFirebaseAuth.createUserWithEmailAndPassword(email, passwordEntry).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
