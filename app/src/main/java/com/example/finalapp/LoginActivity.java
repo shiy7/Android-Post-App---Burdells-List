@@ -40,9 +40,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
-                if (mFirebaseUser != null && mFirebaseUser.isEmailVerified()) {
-                    Toast.makeText(LoginActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(LoginActivity.this, HomePage.class);
+                if (mFirebaseUser != null) {
+//                    Toast.makeText(LoginActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
+                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(i);
                 } else {
                     Toast.makeText(LoginActivity.this, "Please Login", Toast.LENGTH_SHORT).show();
@@ -66,21 +66,21 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     mFirebaseAuth.signInWithEmailAndPassword(email, passwordEntry)
                             .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                if (mFirebaseAuth.getCurrentUser().isEmailVerified()){
-                                    startActivity(new Intent(LoginActivity.this, HomePage.class));
-                                } else {
-                                    Toast.makeText(LoginActivity.this, "Please verify your email address",
-                                            Toast.LENGTH_SHORT).show();
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        if (mFirebaseAuth.getCurrentUser().isEmailVerified()){
+                                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                        } else {
+                                            Toast.makeText(LoginActivity.this, "Please verify your email address",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        Toast.makeText(LoginActivity.this, "Email/Password wrong. Please try again",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            } else {
-                                Toast.makeText(LoginActivity.this, "Email/Password wrong. Please try again",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                            });
                 }
             }
         });
