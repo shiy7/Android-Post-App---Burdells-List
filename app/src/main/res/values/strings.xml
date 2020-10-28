@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Burdell\'s List</string>
+    <string name="title_home">Home</string>
+    <string name="title_post">Post</string>
+    <string name="title_chat">Chat</string>
 </resources>
