@@ -53,12 +53,13 @@ public class PostActivity extends AppCompatActivity {
     private Button upload;
     private RecyclerView revPhoto;
     private PhotoAdapter photoAdapter;
-    private List<Uri> list = new ArrayList<>();
-    private List<String> downloadList = new ArrayList<>();
+    private List<Uri> list;
+    private List<String> downloadList;
     FirebaseFirestore db;
     FirebaseAuth mFirebaseAuth;
     StorageTask uploadTask;
     StorageReference storageReference;
+    int counter;
 
     EditText title, amount, price, detail;
     TextView post;
@@ -80,6 +81,9 @@ public class PostActivity extends AppCompatActivity {
         detail = findViewById(R.id.edit_detail);
         post = findViewById(R.id.post);
         postClose = findViewById(R.id.postClose);
+
+        list = new ArrayList<>();
+        downloadList = new ArrayList<>();
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -153,19 +157,6 @@ public class PostActivity extends AppCompatActivity {
                     return;
                 }
 
-                FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
-                String userId = firebaseUser.getUid();
-                DocumentReference dbReference = db.collection("posts").document();
-                String postId = dbReference.getId();
-
-                final Map<String, Object> post = new HashMap<>();
-                post.put("poster", userId);
-                post.put("postid", postId);
-                post.put("type", strType);
-                post.put("category", strCategory);
-                post.put("amount", Integer.parseInt(strAmount));
-                post.put("price", Double.parseDouble(strPrice));
-                post.put("detail", strDetail);
 
                 if (list.size() > 0){
                     for (Uri uri : list){
@@ -182,37 +173,26 @@ public class PostActivity extends AppCompatActivity {
                         }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                             @Override
                             public void onComplete(@NonNull Task<Uri> task) {
+                                counter++;
                                 if (task.isSuccessful()){
                                     Uri downloadUri = task.getResult();
                                     downloadList.add(downloadUri.toString());
-                                    post.put("images", downloadList);
                                 } else {
                                     Toast.makeText(PostActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                                }
+                                if (counter == list.size()){
+                                    uploadImage();
                                 }
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
+                                counter++;
                                 Toast.makeText(PostActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
                 }
-
-                dbReference.set(post)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                startActivity(new Intent(PostActivity.this, MainActivity.class));
-                                finish();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(PostActivity.this, "Failed, please retry", Toast.LENGTH_SHORT).show();
-                            }
-                        });
 
 
             }
@@ -227,6 +207,36 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void uploadImage(){
+        FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
+        String userId = firebaseUser.getUid();
+        DocumentReference dbReference = db.collection("posts").document();
+        String postId = dbReference.getId();
+
+        Map<String, Object> post = new HashMap<>();
+        post.put("poster", userId);
+        post.put("postid", postId);
+        post.put("type", strType);
+        post.put("category", strCategory);
+        post.put("amount", Integer.parseInt(strAmount));
+        post.put("price", Double.parseDouble(strPrice));
+        post.put("detail", strDetail);
+        post.put("images", downloadList);
+
+        dbReference.set(post)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        startActivity(new Intent(PostActivity.this, MainActivity.class));
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(PostActivity.this, "Failed, please retry", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
 
 
     }
