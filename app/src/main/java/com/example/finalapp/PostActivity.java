@@ -81,6 +81,7 @@ public class PostActivity extends AppCompatActivity {
         post = findViewById(R.id.post);
         postClose = findViewById(R.id.postClose);
 
+        mFirebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference("posts");
 
@@ -124,7 +125,96 @@ public class PostActivity extends AppCompatActivity {
         post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadImage();
+                // post into firebase
+                spinnerType = findViewById(R.id.SpinnerType);
+                strType = spinnerType.getSelectedItem().toString();
+                spinnerCategory = findViewById(R.id.SpinnerCategory);
+                strCategory = spinnerCategory.getSelectedItem().toString();
+
+                strTitle = title.getText().toString();
+                strAmount = amount.getText().toString();
+                strPrice = price.getText().toString();
+                strDetail = detail.getText().toString();
+
+                if (TextUtils.isEmpty(strTitle)) {
+                    title.setError("Please enter title.");
+                    return;
+                }
+                if (TextUtils.isEmpty(strAmount)) {
+                    amount.setError("Please enter an number.");
+                    return;
+                }
+                if (TextUtils.isEmpty(strPrice)) {
+                    price.setError("Please enter an number.");
+                    return;
+                }
+                if (TextUtils.isEmpty(strDetail)) {
+                    amount.setError("Please enter details.");
+                    return;
+                }
+
+                FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
+                String userId = firebaseUser.getUid();
+                DocumentReference dbReference = db.collection("posts").document();
+                String postId = dbReference.getId();
+
+                final Map<String, Object> post = new HashMap<>();
+                post.put("poster", userId);
+                post.put("postid", postId);
+                post.put("type", strType);
+                post.put("category", strCategory);
+                post.put("amount", Integer.parseInt(strAmount));
+                post.put("price", Double.parseDouble(strPrice));
+                post.put("detail", strDetail);
+
+                if (list.size() > 0){
+                    for (Uri uri : list){
+                        final StorageReference fileReference = storageReference.child(System.currentTimeMillis()+'.'+getFileExtension(uri));
+                        uploadTask = fileReference.putFile(uri);
+                        uploadTask.continueWithTask(new Continuation() {
+                            @Override
+                            public Object then(@NonNull Task task) throws Exception {
+                                if (!task.isComplete()){
+                                    throw Objects.requireNonNull(task.getException());
+                                }
+                                return fileReference.getDownloadUrl();
+                            }
+                        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Uri> task) {
+                                if (task.isSuccessful()){
+                                    Uri downloadUri = task.getResult();
+                                    downloadList.add(downloadUri.toString());
+                                    post.put("images", downloadList);
+                                } else {
+                                    Toast.makeText(PostActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(PostActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                }
+
+                dbReference.set(post)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                startActivity(new Intent(PostActivity.this, MainActivity.class));
+                                finish();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(PostActivity.this, "Failed, please retry", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+
             }
         });
 
@@ -137,95 +227,6 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void uploadImage(){
-        // post into firebase
-        spinnerType = findViewById(R.id.SpinnerType);
-        strType = spinnerType.getSelectedItem().toString();
-        spinnerCategory = findViewById(R.id.SpinnerCategory);
-        strCategory = spinnerCategory.getSelectedItem().toString();
-
-        strTitle = title.getText().toString();
-        strAmount = amount.getText().toString();
-        strPrice = price.getText().toString();
-        strDetail = detail.getText().toString();
-
-        if (TextUtils.isEmpty(strTitle)) {
-            title.setError("Please enter title.");
-            return;
-        }
-        if (TextUtils.isEmpty(strAmount)) {
-            amount.setError("Please enter an number.");
-            return;
-        }
-        if (TextUtils.isEmpty(strPrice)) {
-            price.setError("Please enter an number.");
-            return;
-        }
-        if (TextUtils.isEmpty(strDetail)) {
-            amount.setError("Please enter details.");
-            return;
-        }
-
-        if (list.size() > 0){
-            for (Uri uri : list){
-                final StorageReference fileReference = storageReference.child(System.currentTimeMillis()+'.'+getFileExtension(uri));
-                uploadTask = fileReference.putFile(uri);
-                uploadTask.continueWith(new Continuation() {
-                    @Override
-                    public Object then(@NonNull Task task) throws Exception {
-                        if (!task.isComplete()){
-                            throw Objects.requireNonNull(task.getException());
-                        }
-                        return fileReference.getDownloadUrl();
-                    }
-                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()){
-                            Uri downloadUri = task.getResult();
-                            downloadList.add(downloadUri.toString());
-                        } else {
-                            Toast.makeText(PostActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(PostActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        }
-
-        FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
-        String userId = firebaseUser.getUid();
-        DocumentReference dbReference = db.collection("posts").document();
-        String postId = dbReference.getId();
-
-        Map<String, Object> post = new HashMap<>();
-        post.put("poster", userId);
-        post.put("postid", postId);
-        post.put("type", strType);
-        post.put("category", strCategory);
-        post.put("amount", Integer.parseInt(strAmount));
-        post.put("price", Double.parseDouble(strPrice));
-        post.put("detail", strDetail);
-        post.put("images", downloadList);
-
-        dbReference.set(post)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        startActivity(new Intent(PostActivity.this, MainActivity.class));
-                        finish();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(PostActivity.this, "Failed, please retry", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
 
 
     }
