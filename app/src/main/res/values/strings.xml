@@ -3,4 +3,23 @@
     <string name="title_home">Home</string>
     <string name="title_post">Post</string>
     <string name="title_chat">Chat</string>
+    <string name="title_shop">Shop</string>
+    <string name="title_account">Profile</string>
+
+    <string-array name="type">
+        <item>Require</item>
+        <item>Service</item>
+    </string-array>
+
+    <string-array name="category">
+        <item>Moving</item>
+        <item>Cleaning</item>
+        <item>Touring</item>
+        <item>Shopping</item>
+        <item>Repairing</item>
+        <item>Other</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>
