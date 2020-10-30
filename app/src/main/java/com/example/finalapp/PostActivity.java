@@ -138,7 +138,7 @@ public class PostActivity extends AppCompatActivity {
                 strTitle = title.getText().toString();
                 strAmount = amount.getText().toString();
                 strPrice = price.getText().toString();
-                strDetail = detail.getText().toString();
+                strDetail = detail.getText().toString().replaceAll("\\n", "<br />");
 
                 if (TextUtils.isEmpty(strTitle)) {
                     title.setError("Please enter title.");
@@ -192,6 +192,8 @@ public class PostActivity extends AppCompatActivity {
                             }
                         });
                     }
+                } else {
+                    uploadImage();
                 }
 
 
