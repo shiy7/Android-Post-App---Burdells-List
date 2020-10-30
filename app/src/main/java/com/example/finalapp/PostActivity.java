@@ -42,6 +42,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -218,10 +219,12 @@ public class PostActivity extends AppCompatActivity {
         post.put("poster", userId);
         post.put("postid", postId);
         post.put("type", strType);
+        post.put("title",strTitle);
         post.put("category", strCategory);
         post.put("amount", Integer.parseInt(strAmount));
         post.put("price", Double.parseDouble(strPrice));
         post.put("detail", strDetail);
+        post.put("date", new Date());
         post.put("images", downloadList);
 
         dbReference.set(post)
