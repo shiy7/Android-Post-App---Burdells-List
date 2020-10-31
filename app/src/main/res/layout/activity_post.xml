@@ -9,193 +9,180 @@
     <!-- TODO: Update blank fragment layout -->
 
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/postToolBar"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/postToolBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/light_blue">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/light_blue">
+            android:layout_height="wrap_content">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/postClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/ic_baseline_close_24" />
 
-                <ImageView
-                    android:id="@+id/postClose"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:src="@drawable/ic_baseline_close_24" />
+            <TextView
+                android:id="@+id/post"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:text="POST"
+                android:textColor="@color/text_black"
+                android:textSize="16sp" />
+        </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/post"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="10dp"
-                    android:text="POST"
-                    android:textColor="@color/text_black"
-                    android:textSize="16sp" />
-            </RelativeLayout>
-
-        </androidx.appcompat.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/postToolBar" >
+        android:layout_below="@+id/postToolBar">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/txt_type"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Post Type"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp" />
-
-
-        <Spinner
-            android:id="@+id/SpinnerType"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/txt_type"/>
-
-        <TextView
-            android:id="@+id/txt_category"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Category"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_below="@+id/SpinnerType"/>
+            <TextView
+                android:id="@+id/txt_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:text="Post Type" />
 
 
-        <Spinner
-            android:id="@+id/SpinnerCategory"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_below="@+id/txt_category"/>
+            <Spinner
+                android:id="@+id/SpinnerType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp" />
 
-        <TextView
-            android:id="@+id/txt_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:inputType="text"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_below="@+id/SpinnerCategory" />
+            <TextView
+                android:id="@+id/txt_category"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:text="Category" />
 
-        <EditText
-            android:id="@+id/edit_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_below="@+id/txt_title" />
 
-        <TextView
-            android:id="@+id/txt_amount"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Amount"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="30dp"
-            android:layout_below="@+id/edit_title"    />
+            <Spinner
+                android:id="@+id/SpinnerCategory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp" />
 
-        <EditText
-            android:id="@+id/edit_amount"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_amount"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="30dp"
-            android:inputType="number" />
+            <TextView
+                android:id="@+id/txt_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:inputType="text"
+                android:text="Title" />
 
-        <TextView
-            android:id="@+id/txt_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Price ($)"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_below="@+id/edit_amount" />
+            <EditText
+                android:id="@+id/edit_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp" />
 
-        <EditText
-            android:id="@+id/edit_price"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_price"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="30dp"
-            android:inputType="numberDecimal" />
+            <TextView
+                android:id="@+id/txt_amount"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:text="Amount" />
 
-        <TextView
-            android:id="@+id/txt_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Detail"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_below="@+id/edit_price" />
+            <EditText
+                android:id="@+id/edit_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_amount"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                android:inputType="number" />
 
-        <EditText
-            android:id="@+id/edit_detail"
-            android:gravity="top"
-            android:maxLines="50"
-            android:lines="10"
-            android:inputType="textMultiLine"
-            android:background="@drawable/edit_box"
-            android:textColor="@android:color/black"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/txt_detail" />
+            <TextView
+                android:id="@+id/txt_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:text="Price ($)" />
 
-        <Button
-            android:id="@+id/upload"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Upload Images"
-            android:background="@color/light_gray"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="90dp"
-            android:layout_marginEnd="90dp"
-            android:layout_below="@+id/edit_detail"/>
+            <EditText
+                android:id="@+id/edit_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt_price"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                android:inputType="numberDecimal" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rev_photo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="20dp"
-            android:layout_below="@+id/upload"/>
+            <TextView
+                android:id="@+id/txt_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="30dp"
+                android:text="Detail" />
+
+            <EditText
+                android:id="@+id/edit_detail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                android:background="@drawable/edit_box"
+                android:gravity="top"
+                android:inputType="textMultiLine"
+                android:lines="10"
+                android:maxLines="50"
+                android:textColor="@android:color/black" />
+
+            <Button
+                android:id="@+id/upload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="90dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="90dp"
+                android:background="@color/light_gray"
+                android:text="Upload Images" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rev_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="20dp" />
         </LinearLayout>
     </ScrollView>
-
-
 
 
 </RelativeLayout>

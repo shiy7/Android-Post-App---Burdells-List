@@ -51,22 +51,18 @@ import java.util.Objects;
 public class PostActivity extends AppCompatActivity {
 
     private Spinner spinnerType, spinnerCategory;
-    private Button upload;
-    private RecyclerView revPhoto;
     private PhotoAdapter photoAdapter;
     private List<Uri> list;
     private List<String> downloadList;
-    FirebaseFirestore db;
-    FirebaseAuth mFirebaseAuth;
-    StorageTask uploadTask;
-    StorageReference storageReference;
-    int counter;
+    private FirebaseFirestore db;
+    private FirebaseAuth mFirebaseAuth;
+    private StorageTask uploadTask;
+    private StorageReference storageReference;
+    private int counter;
 
-    EditText title, amount, price, detail;
-    TextView post;
-    ImageView postClose;
+    private EditText title, amount, price, detail;
 
-    String strType, strCategory, strTitle, strAmount, strPrice, strDetail;
+    private String strType, strCategory, strTitle, strAmount, strPrice, strDetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,8 +76,8 @@ public class PostActivity extends AppCompatActivity {
         amount = findViewById(R.id.edit_amount);
         price = findViewById(R.id.edit_price);
         detail = findViewById(R.id.edit_detail);
-        post = findViewById(R.id.post);
-        postClose = findViewById(R.id.postClose);
+        TextView post = findViewById(R.id.post);
+        ImageView postClose = findViewById(R.id.postClose);
 
         list = new ArrayList<>();
         downloadList = new ArrayList<>();
@@ -90,7 +86,7 @@ public class PostActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference("posts");
 
-        upload = findViewById(R.id.upload);
+        Button upload = findViewById(R.id.upload);
         photoAdapter = new PhotoAdapter(this);
 
         upload.setOnClickListener(new View.OnClickListener() {
@@ -253,11 +249,12 @@ public class PostActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            revPhoto = findViewById(R.id.rev_photo);
+            RecyclerView revPhoto = findViewById(R.id.rev_photo);
             GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
             revPhoto.setLayoutManager(gridLayoutManager);
             revPhoto.setAdapter(photoAdapter);
 
+            assert data != null;
             ClipData clipData = data.getClipData();
             if (clipData != null){
                 // multiple image
