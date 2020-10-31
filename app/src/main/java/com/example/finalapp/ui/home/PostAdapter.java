@@ -75,7 +75,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                 if (holder.addToShop.getTag().equals("add")){
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     db.collection("shop").document(firebaseUser.getUid())
-                            .update(post.getPostid(), true)
+                            .update(post.getPostid(), 1)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
