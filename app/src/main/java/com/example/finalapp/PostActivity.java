@@ -226,6 +226,7 @@ public class PostActivity extends AppCompatActivity {
         post.put("detail", strDetail);
         post.put("date", new Date());
         post.put("images", downloadList);
+        post.put("status", getResources().getStringArray(R.array.status)[0]);
 
         dbReference.set(post)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
