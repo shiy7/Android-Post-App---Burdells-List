@@ -22,7 +22,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -46,11 +48,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         return new ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        Post post = mPost.get(position);
+        final Post post = mPost.get(position);
 
         if (post.getImages() == null || post.getImages().size() == 0){
             holder.postImage.setVisibility(View.GONE);
@@ -59,9 +62,55 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             Glide.with(mContext).load(post.getImages().get(0)).into(holder.postImage);
         }
 
-        holder.description.setText(post.getDetail());
+        holder.description.setText(post.getDetail().replaceAll("<br />", "\n"));
+        holder.postTitle.setText(post.getTitle());
+        holder.price.setText("$ "+Double.toString(post.getPrice()));
 
         posterInfo(holder.posterImg, holder.poster, holder.posterRate, post.getPoster());
+        isAddShop(post.getPostid(), holder.addToShop);
+
+        holder.addToShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.addToShop.getTag().equals("add")){
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    db.collection("shop").document(firebaseUser.getUid())
+                            .update(post.getPostid(), true)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    holder.addToShop.setImageResource(R.drawable.ic_baseline_check_circle_24);
+                                    holder.addToShop.setTag("added");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
+
+
+                } else {
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    db.collection("shop").document(firebaseUser.getUid())
+                            .update(post.getPostid(), FieldValue.delete())
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    holder.addToShop.setImageResource(R.drawable.ic_baseline_add_shopping_cart_24);
+                                    holder.addToShop.setTag("add");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+
+                                }
+                            });
+                }
+            }
+        });
 
     }
 
@@ -110,5 +159,32 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
                     }
                 });
+    }
+
+    private void isAddShop(final String postid, final ImageView addToShop){
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("shop").document(firebaseUser.getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.contains(postid)){
+                            addToShop.setImageResource(R.drawable.ic_baseline_check_circle_24);
+                            addToShop.setTag("added");
+                        } else {
+                            addToShop.setImageResource(R.drawable.ic_baseline_add_shopping_cart_24);
+                            addToShop.setTag("add");
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+
+
+
     }
 }

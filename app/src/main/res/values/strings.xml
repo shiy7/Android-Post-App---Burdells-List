@@ -32,6 +32,12 @@
         <item>Other</item>
     </string-array>
 
+    <string-array name="status">
+        <item>active</item>
+        <item>process</item>
+        <item>finish</item>
+    </string-array>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -21,9 +22,14 @@ import com.example.finalapp.model.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +37,7 @@ import java.util.List;
 
 public class HomeFragment extends Fragment {
 
-    Spinner selectPost;
+    private Spinner selectPost;
     private RecyclerView recyclerView;
     private PostAdapter postAdapter;
     private List<Post> postList;
@@ -58,7 +64,30 @@ public class HomeFragment extends Fragment {
         postAdapter = new PostAdapter(getContext(), postList);
         recyclerView.setAdapter(postAdapter);
 
-        readPost();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        final CollectionReference reference = db.collection("posts");
+        selectPost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected = parent.getItemAtPosition(position).toString();
+                Query query = reference.whereEqualTo("status", "active");
+                if (position == 0){
+                    readPost(query);
+                } else if (position == 1 || position == 2){
+                    query = query.whereEqualTo("type", selected);
+                    readPost(query);
+                } else {
+                    query = query.whereEqualTo("category", selected);
+                    readPost(query);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         return view;
     }
 
@@ -69,10 +98,8 @@ public class HomeFragment extends Fragment {
 
     }
 
-
-    private void readPost(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("posts").get()
+    private void readPost(Query query){
+        query.get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {

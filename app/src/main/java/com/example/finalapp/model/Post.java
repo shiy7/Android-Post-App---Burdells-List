@@ -14,9 +14,10 @@ public class Post {
     private String detail;
     private Date postDate;
     private List<String> images;
+    private String status;
 
     public Post(String poster, String postid, String title, String type, String category,
-                int amount, double price, String detail, Date postDate, List<String> images) {
+                int amount, double price, String detail, Date postDate, List<String> images, String status) {
         this.poster = poster;
         this.postid = postid;
         this.title = title;
@@ -27,6 +28,7 @@ public class Post {
         this.detail = detail;
         this.postDate = postDate;
         this.images = images;
+        this.status = status;
     }
 
     public Post() {
@@ -111,5 +113,13 @@ public class Post {
 
     public void setImages(List<String> images) {
         this.images = images;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
