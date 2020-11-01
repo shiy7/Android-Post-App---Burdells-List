@@ -1,73 +1,76 @@
 package com.example.finalapp;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import com.example.finalapp.ui.chat.ChatFragment;
+import com.example.finalapp.ui.home.HomeFragment;
+import com.example.finalapp.ui.profile.ProfileFragment;
+import com.example.finalapp.ui.shop.ShopFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
-    EditText emailID, password;
-    Button btnSignUp;
-    TextView tvSignIn;
-    FirebaseAuth mFirebaseAuth;
+
+    BottomNavigationView navView;
+    Fragment selectedFrag = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
-        emailID = findViewById(R.id.editTextTextEmailAddress);
-        password = findViewById(R.id.etPassword);
-        tvSignIn = findViewById(R.id.textView3);
-        btnSignUp = findViewById(R.id.button);
-        btnSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String email = emailID.getText().toString();
-                String passwordEntry = password.getText().toString();
-                if (email.isEmpty()) {
-                    emailID.setError("Please enter an email");
-                    emailID.requestFocus();
-                } else if (passwordEntry.isEmpty()) {
-                    password.setError("Password enter a password");
-                    password.requestFocus();
-                } else if (email.isEmpty() && passwordEntry.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Fields are empty", Toast.LENGTH_SHORT).show();
-                } else if (!(email.isEmpty() && passwordEntry.isEmpty())) {
-                    mFirebaseAuth.createUserWithEmailAndPassword(email, passwordEntry).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (!task.isSuccessful()) {
-                                Toast.makeText(MainActivity.this, "Sign up unsuccessful. Try again!", Toast.LENGTH_SHORT).show();
-                            } else {
-                                startActivity(new Intent(MainActivity.this, HomePage.class));
-                            }
-                        }
-                    });
-                } else {
-                    Toast.makeText(MainActivity.this, "Error Occurred!", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        navView = findViewById(R.id.nav_view);
 
-        tvSignIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent i = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(i);
-            }
-        });
+
+        navView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment, new HomeFragment()).commit();
+
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    switch (item.getItemId()){
+                        case R.id.navigation_home:
+                            selectedFrag = new HomeFragment();
+                            break;
+                        case R.id.navigation_shop:
+                            selectedFrag = new ShopFragment();
+                            break;
+                        case R.id.navigation_post:
+                            selectedFrag = null;
+                            startActivity(new Intent(MainActivity.this, PostActivity.class));
+                            break;
+                        case R.id.navigation_chat:
+                            selectedFrag = new ChatFragment();
+                            break;
+                        case R.id.navigation_account:
+                            SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
+                            editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+                            selectedFrag = new ProfileFragment();
+                            break;
+                    }
+
+                    if (selectedFrag != null){
+                        getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.nav_host_fragment, selectedFrag).commit();
+                    }
+
+                    return true;
+                }
+            };
+
 }

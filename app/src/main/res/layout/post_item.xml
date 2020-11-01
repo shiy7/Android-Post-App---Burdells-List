@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/post_border">
+
+
+    <ImageView
+        android:id="@+id/addToShop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:src="@drawable/ic_baseline_add_shopping_cart_24"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="10dp"
+        app:tint="@color/light_blue" />
+
+    <TextView
+        android:id="@+id/postTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/addToShop"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:textColor="@color/text_black"
+        android:textStyle="bold"
+        android:textSize="25sp" />
+
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/postTitle"
+        android:maxLines="10"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/postImage"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintDimensionRatio="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintTop_toBottomOf="@id/description" />
+
+    <TextView
+        android:id="@+id/postPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:textSize="20sp"
+        android:textColor="@color/text_black"
+        app:layout_constraintTop_toBottomOf="@+id/postImage"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/posterImg"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:layout_constraintTop_toBottomOf="@+id/postPrice"
+        app:layout_constraintLeft_toLeftOf="@+id/postPrice" />
+
+    <TextView
+        android:id="@+id/poster"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/postPrice"
+        app:layout_constraintLeft_toRightOf="@+id/posterImg"  />
+
+    <TextView
+        android:id="@+id/posterRate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/postPrice"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
