@@ -33,6 +33,7 @@ import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class HomeFragment extends Fragment {
@@ -50,7 +51,7 @@ public class HomeFragment extends Fragment {
 
         selectPost = view.findViewById(R.id.postSelect);
         String[] value = getResources().getStringArray(R.array.select);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_spinner_item, value);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.requireActivity(), android.R.layout.simple_spinner_item, value);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectPost.setAdapter(adapter);
 
@@ -87,6 +88,8 @@ public class HomeFragment extends Fragment {
 
             }
         });
+
+
 
         return view;
     }

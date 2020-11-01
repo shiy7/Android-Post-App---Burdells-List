@@ -88,7 +88,6 @@ public class RegisterActivity extends AppCompatActivity {
                                                     user.put("id", userId);
                                                     user.put("username", username);
                                                     user.put("email", email);
-                                                    user.put("password", passwordEntry);
                                                     user.put("address", "");
                                                     user.put("country", "");
                                                     user.put("state", "");

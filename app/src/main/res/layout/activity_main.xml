@@ -25,14 +25,14 @@
         android:id="@+id/app_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:fontFamily="@font/advent_pro"
         android:gravity="center_horizontal"
-        android:paddingBottom="8dp"
         android:paddingTop="10dp"
+        android:paddingBottom="8dp"
         android:text="@string/app_name"
         android:textSize="30sp"
-        android:fontFamily="@font/dancing_script"
         android:textStyle="bold"
-        android:background="@color/light_blue"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -57,8 +57,9 @@
         android:id="@+id/nav_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/light_blue"
         app:itemIconTint="@drawable/item_selected"
+        app:itemTextColor="@drawable/item_selected"
+        android:background="@color/light_gray"
         app:menu="@menu/bottom_nav_menu" />
 
 </LinearLayout>

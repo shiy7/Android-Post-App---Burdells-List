@@ -12,12 +12,12 @@ public class Post {
     private int amount;
     private double price;
     private String detail;
-    private Date postDate;
+    private Date date;
     private List<String> images;
     private String status;
 
     public Post(String poster, String postid, String title, String type, String category,
-                int amount, double price, String detail, Date postDate, List<String> images, String status) {
+                int amount, double price, String detail, Date date, List<String> images, String status) {
         this.poster = poster;
         this.postid = postid;
         this.title = title;
@@ -26,7 +26,7 @@ public class Post {
         this.amount = amount;
         this.price = price;
         this.detail = detail;
-        this.postDate = postDate;
+        this.date = date;
         this.images = images;
         this.status = status;
     }
@@ -99,12 +99,12 @@ public class Post {
         this.detail = detail;
     }
 
-    public Date getPostDate() {
-        return postDate;
+    public Date getDate() {
+        return date;
     }
 
-    public void setPostDate(Date postDate) {
-        this.postDate = postDate;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public List<String> getImages() {
