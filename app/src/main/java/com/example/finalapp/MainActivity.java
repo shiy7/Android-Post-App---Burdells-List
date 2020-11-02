@@ -31,7 +31,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         navView = findViewById(R.id.nav_view);
-
+        if (getIntent().hasExtra("nav_position")){
+            int id = getIntent().getIntExtra("nav_position", R.id.navigation_home);
+            navView.setSelectedItemId(id);
+        }
 
         navView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
         getSupportFragmentManager().beginTransaction()
@@ -58,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
                             selectedFrag = new ChatFragment();
                             break;
                         case R.id.navigation_account:
-                            SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
-                            editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
+//                            SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
+//                            editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
                             selectedFrag = new ProfileFragment();
                             break;
                     }

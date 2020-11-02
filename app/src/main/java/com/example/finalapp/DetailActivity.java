@@ -71,7 +71,6 @@ public class DetailActivity extends AppCompatActivity {
         backHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(DetailActivity.this, MainActivity.class));
                 finish();
             }
         });
@@ -98,8 +97,10 @@ public class DetailActivity extends AppCompatActivity {
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                startActivity(new Intent(DetailActivity.this, ChatFragment.class));
-//                finish();
+                Intent intent = new Intent(DetailActivity.this, MainActivity.class);
+                intent.putExtra("nav_position", R.id.navigation_chat);
+                mContext.startActivity(intent);
+                finish();
             }
         });
     }
