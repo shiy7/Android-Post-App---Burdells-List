@@ -125,6 +125,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_below="@id/posterLay"/>
 
+
             <Spinner
                 android:id="@+id/detailAmount"
                 android:layout_width="wrap_content"
@@ -137,6 +138,32 @@
                 tools:ignore="RtlHardcoded" />
 
             <TextView
+                android:text="Amount: "
+                android:textColor="@color/text_black"
+                android:id="@+id/txt_orderAmount"
+                android:visibility="gone"
+                android:textSize="22sp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/detailPrice" />
+
+            <TextView
+                android:text="16"
+                android:id="@+id/orderAmount"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="30dp"
+                android:textSize="20sp"
+                android:layout_below="@id/detailPrice"
+                android:layout_toEndOf="@+id/txt_orderAmount"/>
+
+
+            <TextView
                 android:id="@+id/txt_detailDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -145,7 +172,8 @@
                 android:textSize="22sp"
                 android:text="Post Date:"
                 android:textColor="@color/text_black"
-                android:layout_below="@id/detailPrice" />
+                android:layout_below="@id/txt_orderAmount" />
+
 
             <TextView
                 android:id="@+id/detailDate"
@@ -155,7 +183,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="30dp"
                 android:textSize="20sp"
-                android:layout_below="@id/detailPrice"
+                android:layout_below="@id/txt_orderAmount"
                 android:layout_toEndOf="@+id/txt_detailDate"/>
 
             <TextView
@@ -167,7 +195,7 @@
                 android:textSize="22sp"
                 android:text="Type:"
                 android:textColor="@color/text_black"
-                android:layout_below="@id/detailDate" />
+                android:layout_below="@id/txt_detailDate" />
 
             <TextView
                 android:id="@+id/detailType"

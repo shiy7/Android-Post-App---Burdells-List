@@ -31,22 +31,27 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         navView = findViewById(R.id.nav_view);
-        if (getIntent().hasExtra("nav_position")){
-            int id = getIntent().getIntExtra("nav_position", R.id.navigation_home);
-            navView.setSelectedItemId(id);
-        }
+//        if (getIntent().hasExtra("nav_position")) {
+//            int id = getIntent().getIntExtra("nav_position", R.id.navigation_home);
+//            navView.setSelectedItemId(id);
+//            navView.getMenu().findItem(id).setChecked(true);
+//            navView.performClick();
+//
+//        }
 
         navView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment, new HomeFragment()).commit();
-
     }
+
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    switch (item.getItemId()){
+                    switch (item.getItemId()) {
                         case R.id.navigation_home:
                             selectedFrag = new HomeFragment();
                             break;
@@ -67,7 +72,9 @@ public class MainActivity extends AppCompatActivity {
                             break;
                     }
 
-                    if (selectedFrag != null){
+
+
+                    if (selectedFrag != null) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.nav_host_fragment, selectedFrag).commit();
                     }

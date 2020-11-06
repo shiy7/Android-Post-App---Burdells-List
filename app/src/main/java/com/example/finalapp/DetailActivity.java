@@ -47,7 +47,7 @@ public class DetailActivity extends AppCompatActivity {
     private Spinner amount;
     private List<String> value;
     private List<Uri> imageUri;
-    public Context mContext;
+    private Context mContext;
     private ArrayAdapter<String> adapter;
     private Button chat;
 
@@ -57,14 +57,36 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
         mContext = this;
+
+        chat = findViewById(R.id.chatPoster);
+
+
 //        SharedPreferences preferences = mContext.getSharedPreferences("PREFS", Context.MODE_PRIVATE);
 //        postid = preferences.getString("postid", "none");
-
-        if (getIntent().hasExtra("postid")){
+        if (getIntent().hasExtra("postid")) {
             postid = getIntent().getStringExtra("postid");
             setDetails();
-        }
+            if (getIntent().hasExtra("poster")) {
+                if (getIntent().getBooleanExtra("poster", false)) {
+                    amount.setVisibility(View.GONE);
+                    chat.setVisibility(View.GONE);
+                    addShop.setVisibility(View.GONE);
+                }
+            }
+            if (getIntent().hasExtra("orderAmount")) {
+                String str = getIntent().getStringExtra("orderAmount");
+                amount.setVisibility(View.GONE);
+                addShop.setVisibility(View.GONE);
+                TextView txtAmount, amount;
+                txtAmount = findViewById(R.id.txt_orderAmount);
+                amount = findViewById(R.id.orderAmount);
+                txtAmount.setVisibility(View.VISIBLE);
+                amount.setVisibility(View.VISIBLE);
+                amount.setText(str);
 
+            }
+
+        }
 
 
 //         close the detail page
@@ -79,7 +101,7 @@ public class DetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String strAdd = amount.getSelectedItem().toString();
-                if (!strAdd.equals("Select Amount")){
+                if (!strAdd.equals("Select Amount")) {
                     int addAmount = Integer.parseInt(amount.getSelectedItem().toString());
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
@@ -93,18 +115,16 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
-        chat = findViewById(R.id.chatPoster);
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(DetailActivity.this, MainActivity.class);
-                intent.putExtra("nav_position", R.id.navigation_chat);
+//                intent.putExtra("nav_position", R.id.navigation_chat);
                 mContext.startActivity(intent);
                 finish();
             }
         });
     }
-
 
 
     private void setDetails() {
@@ -155,7 +175,7 @@ public class DetailActivity extends AppCompatActivity {
                         Post post = documentSnapshot.toObject(Post.class);
                         assert post != null;
 
-                        for (String str : post.getImages()){
+                        for (String str : post.getImages()) {
                             imageUri.add(Uri.parse(str));
                         }
                         photoDownloadAdapter.setData(imageUri);
@@ -164,7 +184,7 @@ public class DetailActivity extends AppCompatActivity {
                         String userid = post.getPoster();
 
                         title.setText(post.getTitle());
-                        price.setText("$ "+ Double.toString(post.getPrice()));
+                        price.setText("$ " + Double.toString(post.getPrice()));
                         detail.setText(post.getDetail().replaceAll("<br />", "\\n"));
                         @SuppressLint("SimpleDateFormat")
                         SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
@@ -174,14 +194,12 @@ public class DetailActivity extends AppCompatActivity {
 
                         //amount spinner
                         int total = post.getAmount();
-                        for (int i = 1; i <= total; i++){
+                        for (int i = 1; i <= total; i++) {
                             value.add(Integer.toString(i));
                         }
                         adapter.notifyDataSetChanged();
 
                         posterInfo(postImg, poster, posterRate, userid);
-
-
 
                     }
                 })
@@ -194,7 +212,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
-    private void posterInfo(final ImageView posterImg, final TextView poster, final TextView posterRate, String userid){
+    private void posterInfo(final ImageView posterImg, final TextView poster, final TextView posterRate, String userid) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(userid)
                 .get()
@@ -204,7 +222,7 @@ public class DetailActivity extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         User user = documentSnapshot.toObject(User.class);
                         poster.setText(user.getUsername());
-                        posterRate.setText("(Rate: " + Double.toString(user.getRate())+")");
+                        posterRate.setText("(Rate: " + Double.toString(user.getRate()) + ")");
                         Glide.with(mContext).load(user.getImageurl()).into(posterImg);
                     }
                 })

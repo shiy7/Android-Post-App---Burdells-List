@@ -120,7 +120,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         holder.postTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent intent = new Intent(mContext, DetailActivity.class);
                 intent.putExtra("postid", post.getPostid());
                 mContext.startActivity(intent);
