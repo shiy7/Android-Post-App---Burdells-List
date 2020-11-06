@@ -39,7 +39,7 @@
     </string-array>
 
     <string-array name="oderStatus">
-        <item>Paid ?</item>
+        <item>Get Paid ?</item>
         <item>Received ?</item>
         <item>Review</item>
         <item>Done</item>

@@ -82,7 +82,7 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
                 String str = holder.status.getText().toString();
                 final String[] array = mContext.getResources().getStringArray(R.array.oderStatus);
                 switch (str) {
-                    case "Paid ?": {
+                    case "Get Paid ?": {
                         AlertDialog.Builder pay = new AlertDialog.Builder(mContext);
                         pay.setMessage("Are you sure get the payment ?")
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
