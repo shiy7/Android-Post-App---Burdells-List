@@ -32,6 +32,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
@@ -164,7 +165,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                         User user = documentSnapshot.toObject(User.class);
                         Glide.with(mContext).load(user.getImageurl()).into(posterImg);
                         poster.setText(user.getUsername());
-                        posterRate.setText(Double.toString(user.getRate()));
+                        DecimalFormat df = new DecimalFormat("#.#");
+                        posterRate.setText(df.format(user.getRate()));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

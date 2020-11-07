@@ -1,8 +1,10 @@
 package com.example.finalapp.ui.profile.history;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +31,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
 
 public class OrderHistoryFragment extends Fragment {
 
@@ -84,6 +89,7 @@ public class OrderHistoryFragment extends Fragment {
             }
         });
 
+
         return view;
     }
 
@@ -106,5 +112,37 @@ public class OrderHistoryFragment extends Fragment {
 
                     }
                 });
+    }
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 100) {
+            if (resultCode == RESULT_OK ){
+
+                Toast.makeText(getContext(), "Right !", Toast.LENGTH_SHORT).show();
+
+//                FirebaseFirestore db = FirebaseFirestore.getInstance();
+//                String orderId = data.getStringExtra("orderId");
+//                final int position = data.getIntExtra("position", 0);
+//                db.collection("orders").document(orderId)
+//                        .update("buyerStatus", "Done")
+//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                if (task.isSuccessful()){
+//                                    orderHistoryAdapter.notifyItemChanged(position);
+//                                }
+//                            }
+//                        });
+            }
+
+        } else {
+            Toast.makeText(getContext(), "Something gone wrong!", Toast.LENGTH_SHORT).show();
+        }
+
     }
 }

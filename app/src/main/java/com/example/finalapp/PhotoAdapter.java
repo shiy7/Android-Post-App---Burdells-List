@@ -23,6 +23,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     private Context mContext;
     private List<Uri> mListPhoto;
+
 //    private RemoveImgListener removeImgListener;
 
     public PhotoAdapter(Context mContext) {
@@ -48,7 +49,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
 
     @Override
-    public void onBindViewHolder(@NonNull PhotoViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PhotoViewHolder holder, final int position) {
         Uri uri = mListPhoto.get(position);
         if (uri == null){
             return;
@@ -62,6 +63,16 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        holder.remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListPhoto.remove(position);
+                notifyItemRemoved(position);
+            }
+        });
+
+
     }
 
     @Override
@@ -73,12 +84,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
     }
 
     public static class PhotoViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imgPhoto;
+        private ImageView imgPhoto, remove;
 
         public PhotoViewHolder(@NonNull View itemView){
             super(itemView);
 
             imgPhoto = itemView.findViewById(R.id.ima_photo);
+            remove = itemView.findViewById(R.id.img_remove);
         }
     }
 }

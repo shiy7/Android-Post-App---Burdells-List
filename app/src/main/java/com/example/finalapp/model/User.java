@@ -5,16 +5,17 @@ public class User {
     private String id;
     private String username;
     private String imageurl;
-    private double rate;
+    private float rate;
     private String address;
     private String country;
     private String state;
     private String city;
     private String phone;
     private String email;
+    private int reviewCount;
 
-    public User(String id, String username, String imageurl, double rate, String address,
-                String country, String state, String city, String phone, String email) {
+    public User(String id, String username, String imageurl, float rate, String address,
+                String country, String state, String city, String phone, String email, int reviewCount) {
         this.id = id;
         this.username = username;
         this.imageurl = imageurl;
@@ -25,6 +26,7 @@ public class User {
         this.city = city;
         this.phone = phone;
         this.email = email;
+        this.reviewCount = reviewCount;
     }
 
     public User() {
@@ -55,11 +57,11 @@ public class User {
         this.imageurl = imageurl;
     }
 
-    public double getRate() {
+    public float getRate() {
         return rate;
     }
 
-    public void setRate(double rate) {
+    public void setRate(float rate) {
         this.rate = rate;
     }
 
@@ -109,5 +111,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getReviewCount() {
+        return reviewCount;
+    }
+
+    public void setReviewCount(int reviewCount) {
+        this.reviewCount = reviewCount;
     }
 }

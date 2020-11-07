@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -15,9 +16,14 @@ import androidx.navigation.ui.NavigationUI;
 import com.example.finalapp.ui.chat.ChatFragment;
 import com.example.finalapp.ui.home.HomeFragment;
 import com.example.finalapp.ui.profile.ProfileFragment;
+import com.example.finalapp.ui.profile.history.OrderHistoryAdapter;
+import com.example.finalapp.ui.profile.history.PostHistoryFragment;
 import com.example.finalapp.ui.shop.ShopFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,14 +37,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         navView = findViewById(R.id.nav_view);
-//        if (getIntent().hasExtra("nav_position")) {
-//            int id = getIntent().getIntExtra("nav_position", R.id.navigation_home);
-//            navView.setSelectedItemId(id);
-//            navView.getMenu().findItem(id).setChecked(true);
-//            navView.performClick();
-//
-//        }
-
         navView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
 
         getSupportFragmentManager().beginTransaction()
@@ -66,13 +64,9 @@ public class MainActivity extends AppCompatActivity {
                             selectedFrag = new ChatFragment();
                             break;
                         case R.id.navigation_account:
-//                            SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
-//                            editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
                             selectedFrag = new ProfileFragment();
                             break;
                     }
-
-
 
                     if (selectedFrag != null) {
                         getSupportFragmentManager().beginTransaction()

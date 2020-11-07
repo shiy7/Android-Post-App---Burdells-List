@@ -1,6 +1,7 @@
 package com.example.finalapp.ui.profile.history;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -12,11 +13,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.finalapp.BuyerReviewActivity;
 import com.example.finalapp.DetailActivity;
 import com.example.finalapp.R;
+import com.example.finalapp.SellerReviewActivity;
 import com.example.finalapp.model.Order;
 import com.example.finalapp.model.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,6 +31,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapter.ViewHolder>{
 
@@ -55,9 +61,6 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
         holder.date.setText(dateFormat.format(order.getDate()));
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
         holder.orderId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +80,7 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
         }
 
         holder.status.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View v) {
                 String str = holder.status.getText().toString();
@@ -137,12 +141,21 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
                         break;
                     }
                     case "Review":
+                        Intent intent;
                         if (userId.equals(order.getBuyer())){
-
+                            intent = new Intent(mContext, BuyerReviewActivity.class);
+                            intent.putExtra("orderid", order.getId());
+                            intent.putExtra("seller", order.getSeller());
+                            intent.putExtra("position", position);
                         } else {
-
+                            intent = new Intent(mContext, SellerReviewActivity.class);
+                            intent.putExtra("orderid", order.getId());
+                            intent.putExtra("buyer", order.getBuyer());
                         }
+                        ((Activity)mContext).startActivityForResult(intent, 100);
                         break;
+                    case "Done":
+                        holder.status.setTextColor(R.color.gray);
                 }
             }
         });

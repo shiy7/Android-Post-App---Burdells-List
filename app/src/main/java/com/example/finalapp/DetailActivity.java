@@ -31,6 +31,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -222,7 +223,8 @@ public class DetailActivity extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         User user = documentSnapshot.toObject(User.class);
                         poster.setText(user.getUsername());
-                        posterRate.setText("(Rate: " + Double.toString(user.getRate()) + ")");
+                        DecimalFormat df = new DecimalFormat("#.#");
+                        posterRate.setText("(Rate: " + df.format(user.getRate()) + ")");
                         Glide.with(mContext).load(user.getImageurl()).into(posterImg);
                     }
                 })

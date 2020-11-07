@@ -1,6 +1,7 @@
 package com.example.finalapp.ui.profile;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -54,6 +55,7 @@ import com.google.firebase.storage.StorageTask;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.text.DecimalFormat;
 import java.util.Random;
 
 import static android.app.Activity.RESULT_OK;
@@ -226,7 +228,8 @@ public class ProfileFragment extends Fragment {
                         User user = documentSnapshot.toObject(User.class);
                         Glide.with(view).load(user.getImageurl()).into(userImg);
                         userName.setText(user.getUsername());
-                        rate.setText(Double.toString(user.getRate()));
+                        DecimalFormat df = new DecimalFormat("#.#");
+                        rate.setText(df.format(user.getRate()));
                         email = user.getEmail();
                     }
                 })
@@ -250,7 +253,10 @@ public class ProfileFragment extends Fragment {
         } else {
             Toast.makeText(getContext(), "Something gone wrong!", Toast.LENGTH_SHORT).show();
         }
+
     }
+
+
 
     // viewPager2 adapter
     public class ViewPagerStateAdapter extends FragmentStateAdapter {
