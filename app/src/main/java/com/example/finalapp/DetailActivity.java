@@ -51,6 +51,7 @@ public class DetailActivity extends AppCompatActivity {
     private Context mContext;
     private ArrayAdapter<String> adapter;
     private Button chat;
+    private String posterId;
 
 
     @Override
@@ -121,10 +122,9 @@ public class DetailActivity extends AppCompatActivity {
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DetailActivity.this, MainActivity.class);
-//                intent.putExtra("nav_position", R.id.navigation_chat);
+                Intent intent = new Intent(mContext, MessageActivity.class);
+                intent.putExtra("messageTo",posterId);
                 mContext.startActivity(intent);
-                finish();
             }
         });
     }
@@ -236,6 +236,7 @@ public class DetailActivity extends AppCompatActivity {
                         DecimalFormat df = new DecimalFormat("#.#");
                         posterRate.setText("(Rate: " + df.format(user.getRate()) + ")");
                         Glide.with(mContext).load(user.getImageurl()).into(posterImg);
+                        posterId = user.getId();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
