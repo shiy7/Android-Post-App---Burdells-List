@@ -2,11 +2,13 @@ package com.example.finalapp.ui.shop;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,6 +22,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
@@ -48,6 +51,12 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
         this.mPost = mPost;
     }
 
+    public void setData(List<Post> list){
+        this.mPost = list;
+        notifyDataSetChanged();
+    }
+
+
     @NonNull
     @Override
     public ShopAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -56,59 +65,39 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ShopAdapter.ViewHolder holder, int position){
+    public void onBindViewHolder(@NonNull final ShopAdapter.ViewHolder holder, final int position){
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         final Post post = mPost.get(position);
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         if (post.getImages() != null && post.getImages().size() != 0) {
             Glide.with(mContext).load(post.getImages().get(0)).into(holder.postImageShopping);
         }
         holder.postTitleShopping.setText(post.getTitle());
         holder.priceShopping.setText("$ "+Double.toString(post.getPrice()));
+        // set the quantity of the textView
+        holder.updateQuantityValue.setText(post.getQuantity().toString());
 
         // remove item from shopping cart when button removeFromShoppingList is clicked
         holder.removeFromShoppingList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (holder.removeFromShoppingList.getTag().equals("remove")){
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    db.collection("shop").document(firebaseUser.getUid())
-                            .update(post.getPostid(), 1)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    holder.removeFromShoppingList.setImageResource(R.drawable.ic_baseline_remove_circle_24);
-                                    holder.removeFromShoppingList.setTag("removed");
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-
-                                }
-                            });
-                } else {
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
                     db.collection("shop").document(firebaseUser.getUid())
                             .update(post.getPostid(), FieldValue.delete())
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    holder.removeFromShoppingList.setImageResource(R.drawable.ic_baseline_remove_circle_24);
-                                    holder.removeFromShoppingList.setTag("remove");
+                                    DocumentReference documentReference = db.collection("shop").document("user");
+                                    mPost.remove(position);
+                                    notifyItemRemoved(position);
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-
+                                    // Toast.makeText(); //finish making the toast
                                 }
                             });
-                }
-                //logic to delete the post from the firebase store
-                FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-                DocumentReference reference = firestore.collection("shop").document("removed");
-                reference.delete();
             }
         });
 
@@ -127,6 +116,16 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
         holder.reduceQuantityShopping.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("shop").document(firebaseUser.getUid()).
+                        update(post.getPostid(), FieldValue.increment(-1)).
+                        addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Display the quantity in the textView
+                        notifyItemChanged(position);
+                    }
+                });
 
             }
         });
@@ -135,6 +134,8 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
         holder.addToShopQuantityShopping.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                final FirebaseFirestore db = FirebaseFirestore.getInstance();
+                db.collection("shop").document(firebaseUser.getUid()).update(post.getPostid(), FieldValue.increment(1));
 
             }
         });
@@ -148,7 +149,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView postImageShopping, addToShopQuantityShopping, reduceQuantityShopping, removeFromShoppingList;
-        public TextView postTitleShopping, priceShopping, submitShoppingCart;
+        public TextView postTitleShopping, priceShopping, submitShoppingCart, updateQuantityValue;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -159,6 +160,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
             postTitleShopping =  itemView.findViewById(R.id.postTitleShopping);
             reduceQuantityShopping = itemView.findViewById(R.id.reduce_quantity);
             priceShopping =  itemView.findViewById(R.id.price_shopping_cart);
+            updateQuantityValue = itemView.findViewById(R.id.quantity_update_view);
         }
 
     }

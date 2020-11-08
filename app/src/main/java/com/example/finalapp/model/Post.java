@@ -15,6 +15,7 @@ public class Post {
     private Date date;
     private List<String> images;
     private String status;
+    private Long quantity;
 
     public Post(String poster, String postid, String title, String type, String category,
                 int amount, double price, String detail, Date date, List<String> images, String status) {
@@ -29,6 +30,29 @@ public class Post {
         this.date = date;
         this.images = images;
         this.status = status;
+    }
+
+    public Post(String poster, String postid, String title, String type, String category, int amount, double price, String detail, Date date, List<String> images, String status, Long quantity) {
+        this.poster = poster;
+        this.postid = postid;
+        this.title = title;
+        this.type = type;
+        this.category = category;
+        this.amount = amount;
+        this.price = price;
+        this.detail = detail;
+        this.date = date;
+        this.images = images;
+        this.status = status;
+        this.quantity = quantity;
+    }
+
+    public Long getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Long quantity) {
+        this.quantity = quantity;
     }
 
     public Post() {
