@@ -9,16 +9,16 @@ public class Post {
     private String title;
     private String type;
     private String category;
-    private int amount;
-    private double price;
+    private long amount;
+    private long price;
     private String detail;
     private Date date;
     private List<String> images;
     private String status;
-    private Long quantity;
+    private long quantity;
 
     public Post(String poster, String postid, String title, String type, String category,
-                int amount, double price, String detail, Date date, List<String> images, String status) {
+                long amount, long price, String detail, Date date, List<String> images, String status) {
         this.poster = poster;
         this.postid = postid;
         this.title = title;
@@ -32,7 +32,7 @@ public class Post {
         this.status = status;
     }
 
-    public Post(String poster, String postid, String title, String type, String category, int amount, double price, String detail, Date date, List<String> images, String status, Long quantity) {
+    public Post(String poster, String postid, String title, String type, String category, long amount, long price, String detail, Date date, List<String> images, String status, long quantity) {
         this.poster = poster;
         this.postid = postid;
         this.title = title;
@@ -99,19 +99,19 @@ public class Post {
         this.category = category;
     }
 
-    public int getAmount() {
+    public long getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(long amount) {
         this.amount = amount;
     }
 
-    public double getPrice() {
+    public long getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(long price) {
         this.price = price;
     }
 

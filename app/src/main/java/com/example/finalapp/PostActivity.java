@@ -334,7 +334,7 @@ public class PostActivity extends AppCompatActivity {
                         String userid = post.getPoster();
 
                         title.setText(post.getTitle());
-                        amount.setText(Integer.toString(post.getAmount()));
+                        amount.setText(Long.toString(post.getAmount()));
                         price.setText("$ "+ Double.toString(post.getPrice()));
                         detail.setText(post.getDetail().replaceAll("<br />", "\\n"));
                         selectSpinnerValue(spinnerType, post.getType());

@@ -22,6 +22,8 @@ import com.example.finalapp.model.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -67,11 +69,14 @@ public class HomeFragment extends Fragment {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference reference = db.collection("posts");
+        final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
         selectPost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selected = parent.getItemAtPosition(position).toString();
-                Query query = reference.whereEqualTo("status", "active");
+                Query query = reference.whereEqualTo("status", "active")
+                        .whereNotEqualTo("poster", fuser.getUid())
+                        .orderBy("poster");
                 if (position == 0){
                     readPost(query);
                 } else if (position == 1 || position == 2){
@@ -100,7 +105,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void readPost(Query query){
-        query.get()
+        query.orderBy("date").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {

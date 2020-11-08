@@ -198,9 +198,9 @@ public class DetailActivity extends AppCompatActivity {
                         category.setText(post.getCategory());
 
                         //amount spinner
-                        int total = post.getAmount();
+                        long total = post.getAmount();
                         for (int i = 1; i <= total; i++) {
-                            value.add(Integer.toString(i));
+                            value.add(Long.toString(i));
                         }
                         adapter.notifyDataSetChanged();
 
