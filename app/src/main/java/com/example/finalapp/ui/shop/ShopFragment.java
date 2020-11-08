@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.finalapp.R;
@@ -21,10 +22,12 @@ import com.example.finalapp.ui.home.PostAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +35,10 @@ import java.util.List;
 public class ShopFragment extends Fragment {
     //Variables for shopping cart display
     private Spinner selectPost;
-    private Spinner removePost;
     private RecyclerView recyclerView;
-    private PostAdapter postAdapter;
+    private ShopAdapter shopAdapter;
     private List<Post> shopList;
+    private TextView submitshoppingList;
 
     /**
      * Inflate the fragment shop view and begin to setup for showing all the items added to the shopping cart
@@ -45,13 +48,11 @@ public class ShopFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
 
-        removePost = view.findViewById(R.id.Remove_from_shopping_cart);
-        selectPost = view.findViewById(R.id.postSelect);
+        selectPost = view.findViewById(R.id.Shop_Cart_select);
         String[] value = getResources().getStringArray(R.array.select);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_spinner_item, value);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectPost.setAdapter(adapter);
-        removePost.setAdapter(adapter);
 
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
@@ -60,41 +61,37 @@ public class ShopFragment extends Fragment {
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         shopList = new ArrayList<>();
-        postAdapter = new PostAdapter(getContext(), shopList);
-        recyclerView.setAdapter(postAdapter);
+        shopAdapter = new ShopAdapter(getContext(), shopList);
+        recyclerView.setAdapter(shopAdapter);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference reference = db.collection("shop");
 
-        /**
-         * Remove Post from the shopping list having trouble getting the selected item and choosing it to be removed
-         * calls the removeItemFromShop() function to remove the shopping list item from firebase shop portion
-         */
-        removePost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+
+        // Submit shopping list needs to remove all items from shopping list
+        submitshoppingList.setOnClickListener(new View.OnClickListener() {
+            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+            final DocumentReference documentReference = firestore.collection("shop").document();
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selected = parent.getItemAtPosition(position).toString();
-                Query query = reference.whereEqualTo("status", "active");
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void onClick(View view) {
+                // Need to set tags to store for processing as well as transfer
+                // data to the order portion of the user
+                documentReference.delete();
             }
         });
 
         /**
-         * Create a query to reference to get all the posts
+         * Create a query to reference to get all the posts for reading
          */
         selectPost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selected = parent.getItemAtPosition(position).toString();
-                Query query = reference.whereEqualTo("status", "active");
-                if (position == 0){
+                Query query = reference.whereEqualTo("status", "processing");
+                if (position == 0) {
                     readShop(query);
-                } else if (position == 1 || position == 2){
+                } else if (position == 1 || position == 2) {
                     query = query.whereEqualTo("type", selected);
                     readShop(query);
                 } else {
@@ -110,7 +107,6 @@ public class ShopFragment extends Fragment {
         return view;
     }
 
-
     /**
      * Read the data that is placed in the shopping cart portion of the database
      */
@@ -125,18 +121,11 @@ public class ShopFragment extends Fragment {
                                 Post post = document.toObject(Post.class);
                                 shopList.add(post);
                             }
-                            postAdapter.notifyDataSetChanged();
+                            shopAdapter.notifyDataSetChanged();
                         } else{
                             Toast.makeText(getActivity(), "Failed to get data", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
-    }
-
-    /**
-     * This method will remove item from the shopping cart list
-     */
-    public void removeItemFromShop() {
-        return;
     }
 }
