@@ -72,6 +72,9 @@ public class DetailActivity extends AppCompatActivity {
                     amount.setVisibility(View.GONE);
                     chat.setVisibility(View.GONE);
                     addShop.setVisibility(View.GONE);
+                    poster.setVisibility(View.GONE);
+                    postImg.setVisibility(View.GONE);
+                    posterRate.setVisibility(View.GONE);
                 }
             }
             if (getIntent().hasExtra("orderAmount")) {
@@ -84,7 +87,6 @@ public class DetailActivity extends AppCompatActivity {
                 txtAmount.setVisibility(View.VISIBLE);
                 amount.setVisibility(View.VISIBLE);
                 amount.setText(str);
-
             }
 
         }
@@ -163,6 +165,8 @@ public class DetailActivity extends AppCompatActivity {
         amount.setAdapter(adapter);
 
         readPost();
+
+
     }
 
     private void readPost() {
@@ -199,6 +203,12 @@ public class DetailActivity extends AppCompatActivity {
                             value.add(Integer.toString(i));
                         }
                         adapter.notifyDataSetChanged();
+
+                        if (getIntent().hasExtra("contactId")){
+                            userid = getIntent().getStringExtra("contactId");
+                            TextView contact = findViewById(R.id.detailContact);
+                            contact.setVisibility(View.VISIBLE);
+                        }
 
                         posterInfo(postImg, poster, posterRate, userid);
 

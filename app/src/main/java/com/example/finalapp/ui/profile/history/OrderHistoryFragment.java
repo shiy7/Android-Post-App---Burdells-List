@@ -42,18 +42,25 @@ public class OrderHistoryFragment extends Fragment {
     private FirebaseFirestore db;
     private OrderHistoryAdapter orderHistoryAdapter;
 
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_order_history, container, false);
 
+        // tag
+
+
+        // spinner
         Spinner selectOrder = view.findViewById(R.id.orderHisSelect);
         String[] value = getResources().getStringArray(R.array.orderSelect);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this.requireActivity(), android.R.layout.simple_spinner_item, value);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectOrder.setAdapter(adapter);
 
+        // recycle view
         RecyclerView recyclerView = view.findViewById(R.id.orderHis_recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -74,7 +81,7 @@ public class OrderHistoryFragment extends Fragment {
                 Query query = db.collection("orders");
                 if (position == 0) {
                     readOrder(query);
-                } else if (position == 1 ) {
+                } else if (position == 1) {
                     query = query.whereEqualTo("buyer", firebaseUser.getUid());
                     readOrder(query);
                 } else {
@@ -114,35 +121,8 @@ public class OrderHistoryFragment extends Fragment {
                 });
     }
 
+    public void update(int position){
 
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 100) {
-            if (resultCode == RESULT_OK ){
-
-                Toast.makeText(getContext(), "Right !", Toast.LENGTH_SHORT).show();
-
-//                FirebaseFirestore db = FirebaseFirestore.getInstance();
-//                String orderId = data.getStringExtra("orderId");
-//                final int position = data.getIntExtra("position", 0);
-//                db.collection("orders").document(orderId)
-//                        .update("buyerStatus", "Done")
-//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                            @Override
-//                            public void onComplete(@NonNull Task<Void> task) {
-//                                if (task.isSuccessful()){
-//                                    orderHistoryAdapter.notifyItemChanged(position);
-//                                }
-//                            }
-//                        });
-            }
-
-        } else {
-            Toast.makeText(getContext(), "Something gone wrong!", Toast.LENGTH_SHORT).show();
-        }
-
+        orderHistoryAdapter.notifyDataSetChanged();
     }
 }

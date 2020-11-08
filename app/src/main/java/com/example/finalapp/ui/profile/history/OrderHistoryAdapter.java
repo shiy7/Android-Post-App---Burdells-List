@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,9 +52,13 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
         return new OrderHistoryAdapter.ViewHolder(v);
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
         final Order order = orderList.get(position);
+
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        final String userId = user.getUid();
 
         holder.orderId.setText(order.getId());
 
@@ -67,17 +72,27 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
                 Intent intent = new Intent(mContext, DetailActivity.class);
                 intent.putExtra("postid", order.getPostid());
                 intent.putExtra("orderAmount", Integer.toString(order.getAmount()));
+                if (userId.equals(order.getBuyer())){
+                    intent.putExtra("contactId", order.getSeller());
+                } else {
+                    intent.putExtra("contactId", order.getBuyer());
+                }
                 mContext.startActivity(intent);
             }
         });
 
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        final String userId = user.getUid();
+
+        String strStatus;
         if (userId.equals(order.getBuyer())){
-            holder.status.setText(order.getBuyerStatus());
+            strStatus = order.getBuyerStatus();
         } else {
-            holder.status.setText(order.getSellerStatus());
+            strStatus = order.getSellerStatus();
         }
+        holder.status.setText(strStatus);
+        if (strStatus.equals("Done")){
+            holder.status.setTextColor(R.color.gray);
+        }
+
 
         holder.status.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceAsColor")
@@ -147,15 +162,16 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
                             intent.putExtra("orderid", order.getId());
                             intent.putExtra("seller", order.getSeller());
                             intent.putExtra("position", position);
+                            ((Activity)mContext).startActivityForResult(intent, 100);
                         } else {
                             intent = new Intent(mContext, SellerReviewActivity.class);
                             intent.putExtra("orderid", order.getId());
                             intent.putExtra("buyer", order.getBuyer());
+                            intent.putExtra("position", position);
+                            ((Activity)mContext).startActivityForResult(intent, 200);
                         }
-                        ((Activity)mContext).startActivityForResult(intent, 100);
+
                         break;
-                    case "Done":
-                        holder.status.setTextColor(R.color.gray);
                 }
             }
         });

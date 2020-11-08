@@ -64,6 +64,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
             e.printStackTrace();
         }
 
+        holder.remove.setVisibility(View.VISIBLE);
         holder.remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
