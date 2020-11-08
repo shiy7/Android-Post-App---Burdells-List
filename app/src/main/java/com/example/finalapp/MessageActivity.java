@@ -1,6 +1,7 @@
 package com.example.finalapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +26,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -78,6 +81,7 @@ public class MessageActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
+
 
         // get receiver information
         receiverInfo(receiverId);
@@ -157,26 +161,44 @@ public class MessageActivity extends AppCompatActivity {
 
 
         db.collection("chats")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            mChat.clear();
-                            QuerySnapshot documentSnapshot = task.getResult();
-                            assert documentSnapshot != null;
-                            for (QueryDocumentSnapshot snapshot : documentSnapshot) {
-                                Chat chat = snapshot.toObject(Chat.class);
-                                if (chat.getSender().equals(userId) && chat.getReceiver().equals(partnerId)
-                                        || chat.getSender().equals(partnerId) && chat.getReceiver().equals(userId)) {
-                                    mChat.add(chat);
-                                }
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        mChat.clear();
+                        for (QueryDocumentSnapshot snapshot : value) {
+                            Chat chat = snapshot.toObject(Chat.class);
+                            if (chat.getSender().equals(userId) && chat.getReceiver().equals(partnerId)
+                                    || chat.getSender().equals(partnerId) && chat.getReceiver().equals(userId)) {
+                                mChat.add(chat);
                             }
-                        } else {
-                            Toast.makeText(MessageActivity.this, "Error to get message", Toast.LENGTH_SHORT).show();
+                            messageAdapter = new MessageAdapter(MessageActivity.this, mChat, imageurl);
+                            recyclerView.setAdapter(messageAdapter);
                         }
+
                     }
                 });
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            mChat.clear();
+//                            QuerySnapshot documentSnapshot = task.getResult();
+//                            assert documentSnapshot != null;
+//                            for (QueryDocumentSnapshot snapshot : documentSnapshot) {
+//                                Chat chat = snapshot.toObject(Chat.class);
+//                                if (chat.getSender().equals(userId) && chat.getReceiver().equals(partnerId)
+//                                        || chat.getSender().equals(partnerId) && chat.getReceiver().equals(userId)) {
+//                                    mChat.add(chat);
+//                                }
+//
+//                                messageAdapter = new MessageAdapter(MessageActivity.this, mChat, imageurl);
+//                                recyclerView.setAdapter(messageAdapter);
+//                            }
+//                        } else {
+//                            Toast.makeText(MessageActivity.this, "Error to get message", Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
 
     }
 }
