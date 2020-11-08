@@ -12,10 +12,10 @@ public class User {
     private String city;
     private String phone;
     private String email;
-    private int reviewCount;
+    private long reviewCount;
 
     public User(String id, String username, String imageurl, float rate, String address,
-                String country, String state, String city, String phone, String email, int reviewCount) {
+                String country, String state, String city, String phone, String email, long reviewCount) {
         this.id = id;
         this.username = username;
         this.imageurl = imageurl;
@@ -113,11 +113,11 @@ public class User {
         this.email = email;
     }
 
-    public int getReviewCount() {
+    public long getReviewCount() {
         return reviewCount;
     }
 
-    public void setReviewCount(int reviewCount) {
+    public void setReviewCount(long reviewCount) {
         this.reviewCount = reviewCount;
     }
 }

@@ -88,7 +88,7 @@ public class BuyerReviewActivity extends AppCompatActivity {
                                                 User user = documentSnapshot.toObject(User.class);
                                                 assert user != null;
                                                 float rate = user.getRate();
-                                                int count = user.getReviewCount() + 1;
+                                                long count = user.getReviewCount() + 1;
                                                 float finalRate;
                                                 if (count > 1) {
                                                     finalRate = (rate + avg) / count;
