@@ -97,9 +97,9 @@ public class MainActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-//                                ProfileFragment fragment = (ProfileFragment) getSupportFragmentManager().getFragments().get(4);
-//                                OrderHistoryFragment fragment1 = (OrderHistoryFragment) fragment.getChildFragmentManager().getFragments().get(1);
-//                                fragment1.update(position);
+                                List<Fragment> list = getSupportFragmentManager().getFragments();
+                                OrderHistoryFragment fragment = (OrderHistoryFragment) list.get(3);
+                                fragment.update(position);
                             }
                         }
                     });

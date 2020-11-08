@@ -39,20 +39,12 @@ public class LoginActivity extends AppCompatActivity {
         tvSignUp = findViewById(R.id.textView3);
         btnSignIn = findViewById(R.id.button);
 
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
-            FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
-                if (mFirebaseUser != null && mFirebaseUser.isEmailVerified()) {
-//                    Toast.makeText(LoginActivity.this, "You are logged in", Toast.LENGTH_SHORT).show();
-                    Intent i = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(i);
-                } else {
-                    Toast.makeText(LoginActivity.this, "Please Login", Toast.LENGTH_SHORT).show();
-                }
-            }
-        };
+        FirebaseUser mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        if (mFirebaseUser != null && mFirebaseUser.isEmailVerified()) {
+            Intent i = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(i);
+        }
+
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,9 +131,4 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mFirebaseAuth.addAuthStateListener(mAuthStateListener);
-    }
 }

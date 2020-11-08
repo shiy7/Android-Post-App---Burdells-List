@@ -122,7 +122,6 @@ public class OrderHistoryFragment extends Fragment {
     }
 
     public void update(int position){
-
-        orderHistoryAdapter.notifyDataSetChanged();
+        orderHistoryAdapter.notifyItemChanged(position);
     }
 }
