@@ -96,7 +96,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                                 }
                             });
 
-
                 } else {
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     db.collection("shop").document(firebaseUser.getUid())
@@ -199,8 +198,5 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
                     }
                 });
-
-
-
     }
 }

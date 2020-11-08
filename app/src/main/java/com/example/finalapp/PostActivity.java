@@ -259,9 +259,6 @@ public class PostActivity extends AppCompatActivity {
                         Toast.makeText(PostActivity.this, "Failed, please retry", Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
-
     }
 
 
