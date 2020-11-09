@@ -34,6 +34,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -143,6 +144,7 @@ public class MessageActivity extends AppCompatActivity {
         infor.put("sender", sender);
         infor.put("receiver", receiver);
         infor.put("message", message);
+        infor.put("date", new Date());
 
         db.collection("chats").document()
                 .set(infor)
@@ -161,6 +163,7 @@ public class MessageActivity extends AppCompatActivity {
 
 
         db.collection("chats")
+                .orderBy("date")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {

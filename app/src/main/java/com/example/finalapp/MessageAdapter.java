@@ -53,6 +53,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         holder.showMessage.setText(chat.getMessage());
 
         Glide.with(mContext).load(imageurl).into(holder.profileImage);
+
     }
 
     @Override

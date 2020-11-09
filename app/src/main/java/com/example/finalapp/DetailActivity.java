@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -113,8 +114,20 @@ public class DetailActivity extends AppCompatActivity {
                     assert firebaseUser != null;
                     String userId = firebaseUser.getUid();
                     db.collection("shop").document(userId)
-                            .update(postid, FieldValue.increment(addAmount));
-                    amount.setSelection(0);
+                            .update(postid, FieldValue.increment(addAmount))
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    amount.setSelection(0);
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(DetailActivity.this, "Fail to add", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
                 }
             }
         });

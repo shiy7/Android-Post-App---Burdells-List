@@ -76,7 +76,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
         holder.postTitleShopping.setText(post.getTitle());
         holder.priceShopping.setText("$ "+Double.toString(post.getPrice()));
         // set the quantity of the textView
-        holder.updateQuantityValue.setText(post.getQuantity().toString());
+//        holder.updateQuantityValue.setText(post.getQuantity().toString());
 
         // remove item from shopping cart when button removeFromShoppingList is clicked
         holder.removeFromShoppingList.setOnClickListener(new View.OnClickListener() {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,7 +31,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -70,7 +73,7 @@ public class ShopFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view_shop_fragment);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        linearLayoutManager.setReverseLayout(true);
+//        linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         shopList = new ArrayList<>();
@@ -85,47 +88,64 @@ public class ShopFragment extends Fragment {
         // display the shop items
         final Map<String, Long> postIdList = new HashMap<>();
 
-        db.collection("shop").document(firebaseUser.getUid()).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    shopList.clear();
-                    Map<String, Object> map = documentSnapshot.getData();
-                    if (map != null) {
-                        for (final Map.Entry<String, Object> entry : map.entrySet()) {
-                            // want info from the post
-                            postIdList.put(entry.getKey(), (Long) entry.getValue());
-                        }
-                    }
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getActivity(), "Failed shopping cart", Toast.LENGTH_SHORT).show();
-            }
-        });
 
-        for (final Map.Entry<String, Long> entry : postIdList.entrySet()) {
-            db.collection("posts").document(entry.getKey()).get()
-                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                        @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            Post post = documentSnapshot.toObject(Post.class);
-                            post.setQuantity(Long.parseLong(entry.getValue().toString()));
-                            shopList.add(post);
-                        }
-                    });
-        }
-       shopAdapter.setData(shopList);
+//        db.collection("shop").document(firebaseUser.getUid()).get()
+//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                if (documentSnapshot.exists()) {
+//                    shopList.clear();
+//                    Map<String, Object> map = documentSnapshot.getData();
+//                    if (map != null) {
+//                        for (final Map.Entry<String, Object> entry : map.entrySet()) {
+//                            // want info from the post
+//                            postIdList.put(entry.getKey(), (Long) entry.getValue());
+//                        }
+//                    }
+//                }
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(getActivity(), "Failed shopping cart", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        for (final Map.Entry<String, Long> entry : postIdList.entrySet()) {
+//            db.collection("posts").document(entry.getKey()).get()
+//                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                        @Override
+//                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                            Post post = documentSnapshot.toObject(Post.class);
+//                            post.setQuantity(Long.parseLong(entry.getValue().toString()));
+//                            shopList.add(post);
+//                        }
+//                    });
+//        }
+//       shopAdapter.setData(shopList);
+//
 //        // Submit shopping list needs to remove all items from shopping list
+//
+//        submitshoppingList = view.findViewById(R.id.submit_shopping_cart);
 //        submitshoppingList.setOnClickListener(new View.OnClickListener() {
-//            FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-//            final DocumentReference documentReference = firestore.collection("shop").document();
 //            @Override
 //            public void onClick(View view) {
-//                documentReference.delete();
+//
+//                db.collection("shop").document(firebaseUser.getUid())
+//                        .delete()
+//                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                            @Override
+//                            public void onSuccess(Void aVoid) {
+//                                shopList.clear();
+//                                shopAdapter.setData(shopList);
+//                            }
+//                        })
+//                        .addOnFailureListener(new OnFailureListener() {
+//                            @Override
+//                            public void onFailure(@NonNull Exception e) {
+//
+//                            }
+//                        });
 //            }
 //        });
         return view;

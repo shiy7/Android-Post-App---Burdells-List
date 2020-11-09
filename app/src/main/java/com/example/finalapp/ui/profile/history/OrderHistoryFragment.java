@@ -24,7 +24,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -102,21 +104,18 @@ public class OrderHistoryFragment extends Fragment {
 
 
     private void readOrder(Query query) {
-        query.orderBy("date").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        query.orderBy("date")
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
+                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                        if (value != null){
                             orderList.clear();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                            for (QueryDocumentSnapshot document : value) {
                                 Order order = document.toObject(Order.class);
                                 orderList.add(order);
                             }
                             orderHistoryAdapter.notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(getContext(), "Failed to get data", Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 });
     }
