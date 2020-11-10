@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,6 +35,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.SetOptions;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
@@ -85,8 +87,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             public void onClick(View v) {
                 if (holder.addToShop.getTag().equals("add")){
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    Map<String, Integer> add = new HashMap<>();
+                    add.put(post.getPostid(), 1);
                     db.collection("shop").document(firebaseUser.getUid())
-                            .update(post.getPostid(), 1)
+                            .set(add, SetOptions.merge())
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
@@ -97,7 +101,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-
+                                    Toast.makeText(mContext, "Fail to add", Toast.LENGTH_SHORT).show();
                                 }
                             });
 
@@ -115,7 +119,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-
+                                    Toast.makeText(mContext, "Fail to remove", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }

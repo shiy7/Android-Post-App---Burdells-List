@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.example.finalapp.R;
 import com.example.finalapp.model.Post;
+import com.example.finalapp.model.Shop;
 import com.example.finalapp.ui.home.PostAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -73,7 +74,7 @@ public class ShopFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view_shop_fragment);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-//        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setReverseLayout(true);
         linearLayoutManager.setStackFromEnd(true);
         recyclerView.setLayoutManager(linearLayoutManager);
         shopList = new ArrayList<>();
@@ -87,6 +88,24 @@ public class ShopFragment extends Fragment {
         DocumentReference documentReference = reference.document(firebaseUser.getUid());
         // display the shop items
         final Map<String, Long> postIdList = new HashMap<>();
+
+        DocumentReference shopReference = db.collection("shop")
+                .document(firebaseUser.getUid());
+
+        shopReference.get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()){
+                            DocumentSnapshot snapshot = task.getResult();
+                            Shop shop = snapshot.toObject(Shop.class);
+
+
+                        } else {
+                            Toast.makeText(getContext(), "Fail to get shop list", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
 
 //        db.collection("shop").document(firebaseUser.getUid()).get()
@@ -175,7 +194,7 @@ public class ShopFragment extends Fragment {
                                         }
                                     });
                         }
-                        shopAdapter.setData(shopList);
+                        shopAdapter.notifyDataSetChanged();
                     }
                 }
             }
@@ -219,5 +238,22 @@ public class ShopFragment extends Fragment {
 //                }
 //            }
 //        });
+    }
+
+
+    private void readPost(String postid){
+        FirebaseFirestore dbPost = FirebaseFirestore.getInstance();
+        dbPost.collection("posts").document(postid).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()){
+                            Post post = task.getResult().toObject(Post.class);
+                            shopList.add(post);
+                        } else{
+                            Toast.makeText(getActivity(), "Failed to get post data", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }

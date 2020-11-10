@@ -52,23 +52,28 @@ public class SellerReviewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final FirebaseFirestore db = FirebaseFirestore.getInstance();
-                if (getIntent().hasExtra("orderid") && getIntent().hasExtra("buyer")
-                        && getIntent().hasExtra("position")){
+                Intent intent = getIntent();
+                if (intent.hasExtra("orderid") && intent.hasExtra("buyer")
+                        && intent.hasExtra("position" ) && intent.hasExtra("postid")
+                        && intent.hasExtra("reviewer")){
                     HashMap<String, Object> review = new HashMap<>();
                     final float paymentRate = payRate.getRating();
                     final float comRate = communication.getRating();
+                    String reviewer = intent.getStringExtra("reviewer");
                     review.put("payTime", paymentRate);
                     review.put("communication", comRate);
+                    review.put("reviewer", reviewer);
                     if (comment.getText() != null){
                         review.put("comment", comment.getText().toString());
                     }
-                    final String reviewee = getIntent().getStringExtra("buyer");
-                    final String orderId = getIntent().getStringExtra("orderid");
-                    final int position = getIntent().getIntExtra("position", 0);
+                    final String reviewee = intent.getStringExtra("buyer");
+                    final String orderId = intent.getStringExtra("orderid");
+                    final int position = intent.getIntExtra("position", 0);
+                    String postid = intent.getStringExtra("postid");
                     assert reviewee != null;
                     assert orderId != null;
                     db.collection("reviews").document(reviewee)
-                            .collection("orders").document(orderId)
+                            .collection(postid).document(orderId)
                             .set(review)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

@@ -58,23 +58,28 @@ public class BuyerReviewActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final FirebaseFirestore db = FirebaseFirestore.getInstance();
-                if (getIntent().hasExtra("orderid") && getIntent().hasExtra("seller")
-                && getIntent().hasExtra("position")){
+                Intent intent = getIntent();
+                if (intent.hasExtra("orderid") && intent.hasExtra("seller")
+                        && intent.hasExtra("position" ) && intent.hasExtra("postid")
+                        && intent.hasExtra("reviewer")){
+                    String reviewer = intent.getStringExtra("reviewer");
                     HashMap<String, Object> review = new HashMap<>();
                     final float qualiteRate = quality.getRating();
                     final float comRate = communication.getRating();
                     review.put("quality", qualiteRate);
                     review.put("communication", comRate);
+                    review.put("reviewer", reviewer);
                     if (comment.getText() != null){
                         review.put("comment", comment.getText().toString());
                     }
                     final String reviewee = getIntent().getStringExtra("seller");
                     final String orderId = getIntent().getStringExtra("orderid");
                     final int position = getIntent().getIntExtra("position", 0);
+                    String postid = intent.getStringExtra("postid");
                     assert reviewee != null;
                     assert orderId != null;
                     db.collection("reviews").document(reviewee)
-                            .collection("orders").document(orderId)
+                            .collection(postid).document(orderId)
                             .set(review)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

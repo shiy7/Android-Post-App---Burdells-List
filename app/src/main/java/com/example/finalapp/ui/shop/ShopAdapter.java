@@ -1,5 +1,6 @@
 package com.example.finalapp.ui.shop;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -59,11 +60,12 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
 
     @NonNull
     @Override
-    public ShopAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.shopping_cart_item, parent, false);
-        return new ViewHolder(view);
+        return new ShopAdapter.ViewHolder(view);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull final ShopAdapter.ViewHolder holder, final int position){
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -79,27 +81,27 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
 //        holder.updateQuantityValue.setText(post.getQuantity().toString());
 
         // remove item from shopping cart when button removeFromShoppingList is clicked
-        holder.removeFromShoppingList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                    db.collection("shop").document(firebaseUser.getUid())
-                            .update(post.getPostid(), FieldValue.delete())
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    DocumentReference documentReference = db.collection("shop").document("user");
-                                    mPost.remove(position);
-                                    notifyItemRemoved(position);
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // Toast.makeText(); //finish making the toast
-                                }
-                            });
-            }
-        });
+//        holder.removeFromShoppingList.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                    db.collection("shop").document(firebaseUser.getUid())
+//                            .update(post.getPostid(), FieldValue.delete())
+//                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                @Override
+//                                public void onSuccess(Void aVoid) {
+//                                    DocumentReference documentReference = db.collection("shop").document("user");
+//                                    mPost.remove(position);
+//                                    notifyItemRemoved(position);
+//                                }
+//                            })
+//                            .addOnFailureListener(new OnFailureListener() {
+//                                @Override
+//                                public void onFailure(@NonNull Exception e) {
+//                                    // Toast.makeText(); //finish making the toast
+//                                }
+//                            });
+//            }
+//        });
 
 
         // display details of the post when they click the post title in shopping cart
@@ -112,33 +114,33 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
             }
         });
 
-        //reduce the quantity of the item when you click reduce quantity button
-        holder.reduceQuantityShopping.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("shop").document(firebaseUser.getUid()).
-                        update(post.getPostid(), FieldValue.increment(-1)).
-                        addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // Display the quantity in the textView
-                        notifyItemChanged(position);
-                    }
-                });
+//        //reduce the quantity of the item when you click reduce quantity button
+//        holder.reduceQuantityShopping.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                final FirebaseFirestore db = FirebaseFirestore.getInstance();
+//                db.collection("shop").document(firebaseUser.getUid()).
+//                        update(post.getPostid(), FieldValue.increment(-1)).
+//                        addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        // Display the quantity in the textView
+//                        notifyItemChanged(position);
+//                    }
+//                });
+//
+//            }
+//        });
 
-            }
-        });
-
-        // increase the quantity of the item you want
-        holder.addToShopQuantityShopping.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("shop").document(firebaseUser.getUid()).update(post.getPostid(), FieldValue.increment(1));
-
-            }
-        });
+//        // increase the quantity of the item you want
+//        holder.addToShopQuantityShopping.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                final FirebaseFirestore db = FirebaseFirestore.getInstance();
+//                db.collection("shop").document(firebaseUser.getUid()).update(post.getPostid(), FieldValue.increment(1));
+//
+//            }
+//        });
     }
 
     @Override
@@ -146,16 +148,16 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
         return mPost.size();
     }
 
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public ImageView postImageShopping, addToShopQuantityShopping, reduceQuantityShopping, removeFromShoppingList;
-        public TextView postTitleShopping, priceShopping, submitShoppingCart, updateQuantityValue;
+        public TextView postTitleShopping, priceShopping, updateQuantityValue;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             removeFromShoppingList = itemView.findViewById(R.id.remove_from_shopping_list);
             postImageShopping = itemView.findViewById(R.id.post_image_shopping_cart);
-            submitShoppingCart = itemView.findViewById(R.id.submit_shopping_cart);
             addToShopQuantityShopping = itemView.findViewById(R.id.add_quantity);
             postTitleShopping =  itemView.findViewById(R.id.postTitleShopping);
             reduceQuantityShopping = itemView.findViewById(R.id.reduce_quantity);
@@ -164,7 +166,5 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
         }
 
     }
-    public void remove() {
-        return;
-    }
+
 }

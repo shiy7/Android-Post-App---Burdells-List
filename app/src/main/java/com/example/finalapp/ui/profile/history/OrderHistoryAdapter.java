@@ -161,12 +161,16 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
                             intent.putExtra("orderid", order.getId());
                             intent.putExtra("seller", order.getSeller());
                             intent.putExtra("position", position);
+                            intent.putExtra("postid", order.getPostid());
+                            intent.putExtra("reviewer", order.getBuyer());
                             ((Activity)mContext).startActivityForResult(intent, 100);
                         } else {
                             intent = new Intent(mContext, SellerReviewActivity.class);
                             intent.putExtra("orderid", order.getId());
                             intent.putExtra("buyer", order.getBuyer());
                             intent.putExtra("position", position);
+                            intent.putExtra("postid", order.getPostid());
+                            intent.putExtra("reviewer", order.getSeller());
                             ((Activity)mContext).startActivityForResult(intent, 200);
                         }
 
