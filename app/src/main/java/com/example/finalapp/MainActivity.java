@@ -1,23 +1,27 @@
 package com.example.finalapp;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 
+import com.example.finalapp.post.PostActivity;
 import com.example.finalapp.ui.chat.ChatFragment;
 import com.example.finalapp.ui.home.HomeFragment;
 import com.example.finalapp.ui.profile.ProfileFragment;
+import com.example.finalapp.ui.profile.history.OrderHistoryFragment;
 import com.example.finalapp.ui.shop.ShopFragment;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,19 +35,19 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         navView = findViewById(R.id.nav_view);
-
-
         navView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
+
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.nav_host_fragment, new HomeFragment()).commit();
-
     }
+
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    switch (item.getItemId()){
+                    switch (item.getItemId()) {
                         case R.id.navigation_home:
                             selectedFrag = new HomeFragment();
                             break;
@@ -58,13 +62,11 @@ public class MainActivity extends AppCompatActivity {
                             selectedFrag = new ChatFragment();
                             break;
                         case R.id.navigation_account:
-                            SharedPreferences.Editor editor = getSharedPreferences("PREFS", MODE_PRIVATE).edit();
-                            editor.putString("profileid", FirebaseAuth.getInstance().getCurrentUser().getUid());
                             selectedFrag = new ProfileFragment();
                             break;
                     }
 
-                    if (selectedFrag != null){
+                    if (selectedFrag != null) {
                         getSupportFragmentManager().beginTransaction()
                                 .replace(R.id.nav_host_fragment, selectedFrag).commit();
                     }
@@ -73,4 +75,59 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 100 && resultCode == RESULT_OK) {
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            assert data != null;
+            String orderId = data.getStringExtra("orderId");
+            final int position = data.getIntExtra("position", 0);
+            db.collection("orders").document(orderId)
+                    .update("buyerStatus", "Done")
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                List<Fragment> list = getSupportFragmentManager().getFragments();
+                                OrderHistoryFragment fragment = (OrderHistoryFragment) list.get(3);
+                                fragment.updateBuyer(position);
+                            } else {
+                                Toast.makeText(MainActivity.this,
+                                        "Fail to update order status", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+        }
+
+        if (requestCode == 200 && resultCode == RESULT_OK) {
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            assert data != null;
+            String orderId = data.getStringExtra("orderId");
+            final int position = data.getIntExtra("position", 0);
+            db.collection("orders").document(orderId)
+                    .update("sellerStatus", "Done")
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                List<Fragment> list = getSupportFragmentManager().getFragments();
+                                OrderHistoryFragment fragment = (OrderHistoryFragment) list.get(3);
+                                fragment.updateBuyer(position);
+                            } else {
+                                Toast.makeText(MainActivity.this,
+                                        "Fail to update order status", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+
+        }
+
+
+
+    }
 }

@@ -3,7 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_post">Post</string>
     <string name="title_chat">Chat</string>
-    <string name="title_shop">Shop</string>
+    <string name="title_shop">Cart</string>
     <string name="title_account">Profile</string>
 
     <string-array name="type">
@@ -32,14 +32,34 @@
         <item>Other</item>
     </string-array>
 
+    <!--    status for post   -->
     <string-array name="status">
         <item>active</item>
-        <item>process</item>
-        <item>finish</item>
+        <item>close</item>
+    </string-array>
+
+    <string-array name="oderStatus">
+        <item>Get Paid ?</item>
+        <item>Received ?</item>
+        <item>Review</item>
+        <item>Done</item>
+    </string-array>
+
+    <string-array name="history">
+        <item>Post List</item>
+        <item>Order List</item>
+    </string-array>
+
+    <string-array name="orderSelect">
+        <item>All</item>
+        <item>As Buyer</item>
+        <item>As Seller</item>
     </string-array>
 
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">
+        Hello blank fragment
+    </string>
 
 </resources>

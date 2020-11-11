@@ -1,4 +1,4 @@
-package com.example.finalapp;
+package com.example.finalapp.post;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,9 +8,10 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.app.ProgressDialog;
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -18,16 +19,18 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.finalapp.MainActivity;
+import com.example.finalapp.R;
+import com.example.finalapp.detail.PhotoDownloadAdapter;
+import com.example.finalapp.model.Post;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,6 +39,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -59,6 +63,7 @@ public class PostActivity extends AppCompatActivity {
     private StorageTask uploadTask;
     private StorageReference storageReference;
     private int counter;
+    private Context mContext;
 
     private EditText title, amount, price, detail;
 
@@ -68,6 +73,7 @@ public class PostActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+        mContext = this;
 
         spinnerType = addItemOnSpinner(R.id.SpinnerType, R.array.type);
         spinnerCategory = addItemOnSpinner(R.id.SpinnerCategory, R.array.category);
@@ -117,7 +123,6 @@ public class PostActivity extends AppCompatActivity {
         postClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(PostActivity.this, MainActivity.class));
                 finish();
             }
         });
@@ -157,7 +162,7 @@ public class PostActivity extends AppCompatActivity {
 
                 if (list.size() > 0){
                     for (Uri uri : list){
-                        final StorageReference fileReference = storageReference.child(System.currentTimeMillis()+'.'+getFileExtension(uri));
+                        final StorageReference fileReference = storageReference.child(System.currentTimeMillis()+"."+ getFileExtension(uri));
                         uploadTask = fileReference.putFile(uri);
                         uploadTask.continueWithTask(new Continuation() {
                             @Override
@@ -197,7 +202,14 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
+
+        if (getIntent().hasExtra("postid")){
+            String postid = getIntent().getStringExtra("postid");
+            setDetails(postid);
+        }
+
     }
+
 
     private String getFileExtension(Uri uri){
         ContentResolver contentResolver = getContentResolver();
@@ -208,8 +220,15 @@ public class PostActivity extends AppCompatActivity {
     private void uploadImage(){
         FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
         String userId = firebaseUser.getUid();
-        DocumentReference dbReference = db.collection("posts").document();
-        String postId = dbReference.getId();
+        String postId;
+        DocumentReference dbReference;
+        if (getIntent().hasExtra("postid")){
+            postId = getIntent().getStringExtra("postid");
+            dbReference = db.collection("posts").document(postId);
+        } else {
+            dbReference = db.collection("posts").document();
+            postId = dbReference.getId();
+        }
 
         Map<String, Object> post = new HashMap<>();
         post.put("poster", userId);
@@ -238,9 +257,6 @@ public class PostActivity extends AppCompatActivity {
                         Toast.makeText(PostActivity.this, "Failed, please retry", Toast.LENGTH_SHORT).show();
                     }
                 });
-
-
-
     }
 
 
@@ -281,6 +297,63 @@ public class PostActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         return spinner;
+    }
+
+
+    private void setDetails(String postid) {
+        PhotoDownloadAdapter photoDownloadAdapter = new PhotoDownloadAdapter(mContext);
+        RecyclerView revPhoto = findViewById(R.id.rev_photo);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+        revPhoto.setLayoutManager(gridLayoutManager);
+        revPhoto.setAdapter(photoDownloadAdapter);
+
+        readPost(postid, photoDownloadAdapter);
+    }
+
+
+    private void readPost(String postid, final PhotoDownloadAdapter photoDownloadAdapter) {
+        final List<Uri> imageUri = new ArrayList<>();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("posts").document(postid).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @SuppressLint("SetTextI18n")
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        // images
+                        Post post = documentSnapshot.toObject(Post.class);
+                        assert post != null;
+
+                        for (String str : post.getImages()){
+                            imageUri.add(Uri.parse(str));
+                        }
+                        photoDownloadAdapter.setData(imageUri);
+
+
+                        String userid = post.getPoster();
+
+                        title.setText(post.getTitle());
+                        amount.setText(Long.toString(post.getAmount()));
+                        price.setText("$ "+ Double.toString(post.getPrice()));
+                        detail.setText(post.getDetail().replaceAll("<br />", "\\n"));
+                        selectSpinnerValue(spinnerType, post.getType());
+                        selectSpinnerValue(spinnerCategory, post.getCategory());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                    }
+                });
+    }
+
+    private void selectSpinnerValue(Spinner spinner, String value){
+        for (int i = 0; i < spinner.getCount(); i++){
+            if (spinner.getItemAtPosition(i).toString().equals(value)){
+                spinner.setSelection(i);
+                break;
+            }
+        }
     }
 
 

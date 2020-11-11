@@ -15,21 +15,17 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.finalapp.MainActivity;
-import com.example.finalapp.PostActivity;
 import com.example.finalapp.R;
 import com.example.finalapp.model.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import org.w3c.dom.Document;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,12 +44,14 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
+        // select spinner
         selectPost = view.findViewById(R.id.postSelect);
         String[] value = getResources().getStringArray(R.array.select);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.getActivity(), android.R.layout.simple_spinner_item, value);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this.requireActivity(), android.R.layout.simple_spinner_item, value);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         selectPost.setAdapter(adapter);
 
+        // recycler view
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -66,11 +64,16 @@ public class HomeFragment extends Fragment {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         final CollectionReference reference = db.collection("posts");
+        final FirebaseUser fuser = FirebaseAuth.getInstance().getCurrentUser();
+
+        // get posts based on select spinner
         selectPost.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selected = parent.getItemAtPosition(position).toString();
-                Query query = reference.whereEqualTo("status", "active");
+                Query query = reference.whereEqualTo("status", "active")
+                        .whereNotEqualTo("poster", fuser.getUid())
+                        .orderBy("poster");
                 if (position == 0){
                     readPost(query);
                 } else if (position == 1 || position == 2){
@@ -94,12 +97,12 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
     }
 
+
+    // get posts from query
     private void readPost(Query query){
-        query.get()
+        query.orderBy("date").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {

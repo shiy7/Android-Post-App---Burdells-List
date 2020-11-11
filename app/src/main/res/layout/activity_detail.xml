@@ -5,134 +5,276 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DetailActivity">
+    tools:context=".detail.DetailActivity">
 
     <!-- TODO: Update blank fragment layout -->
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/detailToolBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/light_blue">
+        android:background="@color/light_gray">
 
         <ImageView
             android:id="@+id/backHome"
             android:src="@drawable/ic_baseline_arrow_back_24"
             android:layout_marginStart="20dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            app:tint="@android:color/black" />
 
     </androidx.appcompat.widget.Toolbar>
 
-    <TextView
-        android:id="@+id/detailTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/text_black"
-        android:textStyle="bold"
-        android:textSize="25sp"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_below="@id/detailToolBar"/>
-
-
-    <RelativeLayout
-        android:id="@+id/posterLay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@id/detailTitle">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/detailPosterImg"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="30dp" />
-
-        <TextView
-            android:id="@+id/detailPoster"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"
-            android:textSize="20sp"
-            android:layout_centerInParent="true"
-            android:layout_toEndOf="@id/detailPosterImg"/>
-
-
-        <Button
-            android:id="@+id/chatPoster"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_centerInParent="true"
-            android:text="Chat"
-            android:layout_toEndOf="@id/detailPoster"/>
-
-        <TextView
-            android:id="@+id/detailDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="30dp"
-            android:textSize="20sp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true" />
-
-    </RelativeLayout>
-
-
-    <TextView
-        android:id="@+id/detailPrice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:textSize="25sp"
-        android:textColor="@color/text_black"
-        android:layout_below="@+id/posterLay" />
-
-    <ImageView
-        android:id="@+id/detailAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_baseline_add_shopping_cart_35"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginTop="10dp"
-        app:tint="@color/light_blue"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/posterLay"/>
-
-    <Spinner
-        android:id="@+id/detailAmount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_toStartOf="@id/detailAdd"
-        android:layout_below="@id/posterLay"/>
-
-    <TextView
-        android:id="@+id/detailDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="30dp"
-        android:layout_below="@id/detailPrice"
-        android:textSize="20sp" />
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/detail_rev_photo"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="30dp"
-        android:layout_marginBottom="20dp"
-        android:layout_below="@+id/detailDescription"/>
+        android:layout_height="match_parent"
+        android:layout_below="@id/detailToolBar">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/detailTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_black"
+                android:textStyle="bold"
+                android:textSize="25sp"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp" />
+
+            <TextView
+                android:id="@+id/detailPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:textSize="25sp"
+                android:textColor="@color/red"
+                android:layout_below="@+id/detailTitle" />
+
+            <ImageView
+                android:id="@+id/detailAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_baseline_add_shopping_cart_35"
+                android:layout_marginStart="30dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="10dp"
+                app:tint="@color/light_blue"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/detailTitle"/>
+
+
+            <Spinner
+                android:id="@+id/detailAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="right"
+                android:textAlignment="gravity"
+                android:layout_toStartOf="@id/detailAdd"
+                android:layout_below="@id/detailTitle"
+                tools:ignore="RtlHardcoded" />
+
+            <View
+                android:id="@+id/delimiter"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:background="@color/light_gray"
+                android:layout_below="@id/detailPrice"/>
+
+            <TextView
+                android:id="@+id/detailContact"
+                android:text="Contact with:"
+                android:layout_marginTop="10dp"
+                android:textSize="20sp"
+                android:textColor="@color/text_black"
+                android:layout_marginStart="30dp"
+                android:layout_alignParentStart="true"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/delimiter"/>
+
+            <RelativeLayout
+                android:id="@+id/posterLay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@id/detailContact">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/detailPosterImg"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="30dp" />
+
+                <TextView
+                    android:id="@+id/detailPoster"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textSize="20sp"
+                    android:layout_centerInParent="true"
+                    android:layout_toEndOf="@id/detailPosterImg"/>
+
+                <TextView
+                    android:id="@+id/detailPosterRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textSize="15sp"
+                    android:layout_centerInParent="true"
+                    android:layout_toEndOf="@id/detailPoster"/>
+
+
+                <Button
+                    android:id="@+id/chatPoster"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginEnd="30dp"
+                    android:text="Chat"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerInParent="true"/>
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:text="Amount: "
+                android:textColor="@color/text_black"
+                android:id="@+id/txt_orderAmount"
+                android:visibility="gone"
+                android:textSize="20sp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/posterLay" />
+
+            <TextView
+                android:id="@+id/orderAmount"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="30dp"
+                android:textSize="20sp"
+                android:layout_below="@id/posterLay"
+                android:layout_toEndOf="@+id/txt_orderAmount"/>
+
+
+            <TextView
+                android:id="@+id/txt_detailDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="30dp"
+                android:textSize="20sp"
+                android:text="Post Date:"
+                android:textColor="@color/text_black"
+                android:layout_below="@id/txt_orderAmount" />
+
+
+            <TextView
+                android:id="@+id/detailDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="30dp"
+                android:textSize="20sp"
+                android:layout_below="@id/txt_orderAmount"
+                android:layout_toEndOf="@+id/txt_detailDate"/>
+
+            <TextView
+                android:id="@+id/txt_detailType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="30dp"
+                android:textSize="22sp"
+                android:text="Type:"
+                android:textColor="@color/text_black"
+                android:layout_below="@id/txt_detailDate" />
+
+            <TextView
+                android:id="@+id/detailType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
+                android:textSize="22sp"
+                android:layout_below="@id/detailDate"
+                android:layout_toEndOf="@id/txt_detailType" />
+
+            <TextView
+                android:id="@+id/txt_detailCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="30dp"
+                android:textSize="22sp"
+                android:text="Category:"
+                android:textColor="@color/text_black"
+                android:layout_below="@id/txt_detailType" />
+
+            <TextView
+                android:id="@+id/detailCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp"
+                android:textSize="22sp"
+                android:layout_below="@id/detailType"
+                android:layout_toEndOf="@id/txt_detailCategory"/>
+
+            <TextView
+                android:id="@+id/txt_detailDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="30dp"
+                android:textSize="22sp"
+                android:text="Detail:"
+                android:textColor="@color/text_black"
+                android:layout_below="@id/txt_detailCategory" />
+
+            <TextView
+                android:id="@+id/detailDescription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="30dp"
+                android:layout_below="@id/txt_detailDescription"
+                android:textSize="20sp" />
+
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/detail_rev_photo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginBottom="20dp"
+                android:layout_below="@+id/detailDescription"/>
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+
 
 </RelativeLayout>

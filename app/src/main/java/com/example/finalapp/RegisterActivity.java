@@ -88,13 +88,13 @@ public class RegisterActivity extends AppCompatActivity {
                                                     user.put("id", userId);
                                                     user.put("username", username);
                                                     user.put("email", email);
-                                                    user.put("password", passwordEntry);
                                                     user.put("address", "");
                                                     user.put("country", "");
                                                     user.put("state", "");
                                                     user.put("city", "");
                                                     user.put("phone","");
                                                     user.put("rate", 0.0);
+                                                    user.put("reviewCount", 0);
                                                     user.put("imageurl", "https://firebasestorage.googleapis.com/v0/b/burdells.appspot.com/o/placeholder.jpg?alt=media&token=55243f20-f030-4932-93e5-3320841d8f3a");
                                                     db.collection("users").document(userId)
                                                             .set(user)
