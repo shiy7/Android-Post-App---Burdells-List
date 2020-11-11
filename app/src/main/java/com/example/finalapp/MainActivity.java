@@ -1,7 +1,6 @@
 package com.example.finalapp;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -10,21 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.navigation.ui.NavigationUI;
 
+import com.example.finalapp.post.PostActivity;
 import com.example.finalapp.ui.chat.ChatFragment;
 import com.example.finalapp.ui.home.HomeFragment;
 import com.example.finalapp.ui.profile.ProfileFragment;
-import com.example.finalapp.ui.profile.history.OrderHistoryAdapter;
 import com.example.finalapp.ui.profile.history.OrderHistoryFragment;
-import com.example.finalapp.ui.profile.history.PostHistoryFragment;
 import com.example.finalapp.ui.shop.ShopFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -117,10 +111,9 @@ public class MainActivity extends AppCompatActivity {
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                 List<Fragment> list = getSupportFragmentManager().getFragments();
-                                 OrderHistoryFragment fragment = (OrderHistoryFragment) list.get(3);
-                                 fragment.update(position);
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(MainActivity.this,
+                                        "Fail to update order status", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

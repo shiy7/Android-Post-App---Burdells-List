@@ -13,7 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.finalapp.MessageActivity;
+import com.example.finalapp.message.MessageActivity;
 import com.example.finalapp.R;
 import com.example.finalapp.model.Chat;
 import com.example.finalapp.model.User;

@@ -70,7 +70,6 @@ public class ProfileFragment extends Fragment {
     public static final String TAG = "ERROR";
 
     private Uri userImgUri;
-    private StorageTask uploadTask;
     private FirebaseUser firebaseUser;
 
 
@@ -164,13 +163,13 @@ public class ProfileFragment extends Fragment {
         return view;
     }
 
-
+    // upload profile image
     private void uploadImage() {
         if (userImgUri != null) {
             StorageReference storageReference = FirebaseStorage.getInstance().getReference("users");
             final StorageReference fileReference = storageReference.child(firebaseUser.getUid());
 
-            uploadTask = fileReference.putFile(userImgUri);
+            StorageTask uploadTask = fileReference.putFile(userImgUri);
             uploadTask.continueWithTask(new Continuation() {
                 @Override
                 public Object then(@NonNull Task task) throws Exception {
@@ -214,7 +213,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-
+    // get user infor
     private void getUserInfo() {
         userImg = view.findViewById(R.id.profileUserImg);
         userName = view.findViewById(R.id.profileUser);
@@ -241,6 +240,7 @@ public class ProfileFragment extends Fragment {
                 });
     }
 
+    // for profile image from CropImage.activity()
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -258,7 +258,7 @@ public class ProfileFragment extends Fragment {
 
 
 
-    // viewPager2 adapter
+    // viewPager2 adapter -- for post history and order history
     public class ViewPagerStateAdapter extends FragmentStateAdapter {
 
         Fragment[] fragments;

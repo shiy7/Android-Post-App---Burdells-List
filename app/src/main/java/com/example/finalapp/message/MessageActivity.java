@@ -1,4 +1,4 @@
-package com.example.finalapp;
+package com.example.finalapp.message;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.finalapp.R;
 import com.example.finalapp.model.Chat;
 import com.example.finalapp.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -32,7 +33,6 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -115,6 +115,7 @@ public class MessageActivity extends AppCompatActivity {
     }
 
 
+    // get receiver infor
     private void receiverInfo(final String userid) {
         db.collection("users").document(userid)
                 .get()

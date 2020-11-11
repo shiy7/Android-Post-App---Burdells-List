@@ -1,4 +1,4 @@
-package com.example.finalapp;
+package com.example.finalapp.post;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,6 +11,8 @@ import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.finalapp.R;
 
 import java.io.IOException;
 import java.util.List;

@@ -1,8 +1,7 @@
-package com.example.finalapp;
+package com.example.finalapp.detail;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,10 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import com.example.finalapp.R;
+import com.example.finalapp.message.MessageActivity;
 import com.example.finalapp.model.Post;
 import com.example.finalapp.model.User;
-import com.example.finalapp.ui.chat.ChatFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -63,12 +62,13 @@ public class DetailActivity extends AppCompatActivity {
 
         chat = findViewById(R.id.chatPoster);
 
-
-//        SharedPreferences preferences = mContext.getSharedPreferences("PREFS", Context.MODE_PRIVATE);
-//        postid = preferences.getString("postid", "none");
+        // get post id
         if (getIntent().hasExtra("postid")) {
             postid = getIntent().getStringExtra("postid");
             setDetails();
+
+            // if poster check own post
+            // not need amount, chat, add, poster information
             if (getIntent().hasExtra("poster")) {
                 if (getIntent().getBooleanExtra("poster", false)) {
                     amount.setVisibility(View.GONE);
@@ -79,6 +79,10 @@ public class DetailActivity extends AppCompatActivity {
                     posterRate.setVisibility(View.GONE);
                 }
             }
+
+            // if check the order
+            // not need amount, add
+            // show orderAmount
             if (getIntent().hasExtra("orderAmount")) {
                 String str = getIntent().getStringExtra("orderAmount");
                 amount.setVisibility(View.GONE);
@@ -102,6 +106,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
+        // add into shop list
         addShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -132,6 +137,7 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
+        // contact
         chat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -153,9 +159,6 @@ public class DetailActivity extends AppCompatActivity {
         recyclerView.setAdapter(photoDownloadAdapter);
         imageUri = new ArrayList<>();
 
-//        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 1);
-//        recyclerView.setLayoutManager(gridLayoutManager);
-//        recyclerView.setAdapter(photoAdapter);
 
         poster = findViewById(R.id.detailPoster);
         title = findViewById(R.id.detailTitle);
@@ -182,6 +185,7 @@ public class DetailActivity extends AppCompatActivity {
 
     }
 
+    // read information from posts
     private void readPost() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("posts").document(postid).get()
@@ -236,6 +240,7 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
+    // get poster information
     private void posterInfo(final ImageView posterImg, final TextView poster, final TextView posterRate, String userid) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(userid)

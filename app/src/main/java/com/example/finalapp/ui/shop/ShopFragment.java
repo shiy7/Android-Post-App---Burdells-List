@@ -56,6 +56,7 @@ public class ShopFragment extends Fragment {
     private ShopAdapter shopAdapter;
     private List<Post> shopList;
     private TextView submitshoppingList;
+    private FirebaseFirestore db;
 
     /**
      * Inflate the fragment shop view and begin to setup for showing all the items added to the shopping cart
@@ -81,7 +82,7 @@ public class ShopFragment extends Fragment {
         shopAdapter = new ShopAdapter(getContext(), shopList);
         recyclerView.setAdapter(shopAdapter);
 
-        final FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
         final CollectionReference reference = db.collection("shop");
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -92,56 +93,56 @@ public class ShopFragment extends Fragment {
         DocumentReference shopReference = db.collection("shop")
                 .document(firebaseUser.getUid());
 
-        shopReference.get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()){
-                            DocumentSnapshot snapshot = task.getResult();
-                            Shop shop = snapshot.toObject(Shop.class);
-
-
-                        } else {
-                            Toast.makeText(getContext(), "Fail to get shop list", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-
-//        db.collection("shop").document(firebaseUser.getUid()).get()
-//                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//            @Override
-//            public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                if (documentSnapshot.exists()) {
-//                    shopList.clear();
-//                    Map<String, Object> map = documentSnapshot.getData();
-//                    if (map != null) {
-//                        for (final Map.Entry<String, Object> entry : map.entrySet()) {
-//                            // want info from the post
-//                            postIdList.put(entry.getKey(), (Long) entry.getValue());
+//        shopReference.get()
+//                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        if (task.isSuccessful()){
+//                            DocumentSnapshot snapshot = task.getResult();
+//                            Shop shop = snapshot.toObject(Shop.class);
+//
+//
+//                        } else {
+//                            Toast.makeText(getContext(), "Fail to get shop list", Toast.LENGTH_SHORT).show();
 //                        }
 //                    }
-//                }
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Toast.makeText(getActivity(), "Failed shopping cart", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        for (final Map.Entry<String, Long> entry : postIdList.entrySet()) {
-//            db.collection("posts").document(entry.getKey()).get()
-//                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                        @Override
-//                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-//                            Post post = documentSnapshot.toObject(Post.class);
-//                            post.setQuantity(Long.parseLong(entry.getValue().toString()));
-//                            shopList.add(post);
-//                        }
-//                    });
-//        }
-//       shopAdapter.setData(shopList);
+//                });
+
+
+        db.collection("shop").document(firebaseUser.getUid()).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    shopList.clear();
+                    Map<String, Object> map = documentSnapshot.getData();
+                    if (map != null) {
+                        for (final Map.Entry<String, Object> entry : map.entrySet()) {
+                            // want info from the post
+                            postIdList.put(entry.getKey(), (Long) entry.getValue());
+                        }
+                    }
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getActivity(), "Failed shopping cart", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        for (final Map.Entry<String, Long> entry : postIdList.entrySet()) {
+            db.collection("posts").document(entry.getKey()).get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            Post post = documentSnapshot.toObject(Post.class);
+                            post.setQuantity(Long.parseLong(entry.getValue().toString()));
+                            shopList.add(post);
+                        }
+                    });
+        }
+       shopAdapter.setData(shopList);
 //
 //        // Submit shopping list needs to remove all items from shopping list
 //

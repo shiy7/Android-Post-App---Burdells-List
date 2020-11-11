@@ -1,4 +1,4 @@
-package com.example.finalapp;
+package com.example.finalapp.review;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.finalapp.R;
 import com.example.finalapp.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -23,23 +24,24 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
-public class SellerReviewActivity extends AppCompatActivity {
+public class BuyerReviewActivity extends AppCompatActivity {
 
     private ImageView back;
-    private AppCompatRatingBar payRate, communication;
+    private AppCompatRatingBar quality, communication;
     private EditText comment;
     private Button submit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_seller_review);
+        setContentView(R.layout.activity_buyer_review);
 
-        back = findViewById(R.id.sellerBack);
-        payRate = findViewById(R.id.sellerPay);
-        communication = findViewById(R.id.sellerCom);
-        comment = findViewById(R.id.sellerComment);
-        submit = findViewById(R.id.sellerSubmit);
+        back = findViewById(R.id.buyerBack);
+        quality = findViewById(R.id.buyerQuality);
+        communication = findViewById(R.id.buyerCom);
+        comment = findViewById(R.id.buyerComment);
+        submit = findViewById(R.id.buyerSubmit);
+
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,27 +50,29 @@ public class SellerReviewActivity extends AppCompatActivity {
             }
         });
 
+        // submit infor to reviews database
+        //        update review rate in reviewee side
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final FirebaseFirestore db = FirebaseFirestore.getInstance();
                 Intent intent = getIntent();
-                if (intent.hasExtra("orderid") && intent.hasExtra("buyer")
+                if (intent.hasExtra("orderid") && intent.hasExtra("seller")
                         && intent.hasExtra("position" ) && intent.hasExtra("postid")
                         && intent.hasExtra("reviewer")){
-                    HashMap<String, Object> review = new HashMap<>();
-                    final float paymentRate = payRate.getRating();
-                    final float comRate = communication.getRating();
                     String reviewer = intent.getStringExtra("reviewer");
-                    review.put("payTime", paymentRate);
+                    HashMap<String, Object> review = new HashMap<>();
+                    final float qualiteRate = quality.getRating();
+                    final float comRate = communication.getRating();
+                    review.put("quality", qualiteRate);
                     review.put("communication", comRate);
                     review.put("reviewer", reviewer);
                     if (comment.getText() != null){
                         review.put("comment", comment.getText().toString());
                     }
-                    final String reviewee = intent.getStringExtra("buyer");
-                    final String orderId = intent.getStringExtra("orderid");
-                    final int position = intent.getIntExtra("position", 0);
+                    final String reviewee = getIntent().getStringExtra("seller");
+                    final String orderId = getIntent().getStringExtra("orderid");
+                    final int position = getIntent().getIntExtra("position", 0);
                     String postid = intent.getStringExtra("postid");
                     assert reviewee != null;
                     assert orderId != null;
@@ -79,7 +83,7 @@ public class SellerReviewActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()){
-                                        final float avg = (paymentRate + comRate) / 2;
+                                        final float avg = (qualiteRate + comRate) / 2;
                                         final DocumentReference document = db.collection("users").document(reviewee);
                                         document.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                                             @Override
@@ -110,7 +114,7 @@ public class SellerReviewActivity extends AppCompatActivity {
                                                 }).addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception e) {
-                                                        Toast.makeText(SellerReviewActivity.this,
+                                                        Toast.makeText(BuyerReviewActivity.this,
                                                                 "Fail to update. Please retry !",
                                                                 Toast.LENGTH_SHORT).show();
                                                     }
@@ -119,13 +123,13 @@ public class SellerReviewActivity extends AppCompatActivity {
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(SellerReviewActivity.this,
+                                                Toast.makeText(BuyerReviewActivity.this,
                                                         "Fail to update. Please retry !",
                                                         Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                     } else {
-                                        Toast.makeText(SellerReviewActivity.this,
+                                        Toast.makeText(BuyerReviewActivity.this,
                                                 "Fail to update. Please retry !",
                                                 Toast.LENGTH_SHORT).show();
                                     }
@@ -134,5 +138,6 @@ public class SellerReviewActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 }

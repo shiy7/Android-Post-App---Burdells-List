@@ -1,4 +1,4 @@
-package com.example.finalapp;
+package com.example.finalapp.post;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -20,16 +19,17 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.webkit.MimeTypeMap;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.finalapp.MainActivity;
+import com.example.finalapp.R;
+import com.example.finalapp.detail.PhotoDownloadAdapter;
 import com.example.finalapp.model.Post;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -45,7 +45,6 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -124,7 +123,6 @@ public class PostActivity extends AppCompatActivity {
         postClose.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(PostActivity.this, MainActivity.class));
                 finish();
             }
         });

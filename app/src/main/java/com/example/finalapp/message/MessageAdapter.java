@@ -1,4 +1,4 @@
-package com.example.finalapp;
+package com.example.finalapp.message;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.finalapp.R;
 import com.example.finalapp.model.Chat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,9 +23,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public static final int MSG_TYPE_RECEIVER = 0;
     public static final int MSG_TYPE_SENDER = 1;
 
-    private Context mContext;
-    private List<Chat> mChat;
-    private String imageurl;
+    private final Context mContext;
+    private final List<Chat> mChat;
+    private final String imageurl;
 
     FirebaseUser user;
 
@@ -43,7 +44,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         } else {
             view = LayoutInflater.from(mContext).inflate(R.layout.chat_item_receiver, parent, false);
         }
-        return new MessageAdapter.ViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
@@ -62,7 +63,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     }
 
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView showMessage;
         public ImageView profileImage;

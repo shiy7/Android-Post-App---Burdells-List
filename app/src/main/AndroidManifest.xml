@@ -16,13 +16,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyAppTheme">
-        <activity android:name=".MessageActivity"></activity>
-        <activity android:name=".SellerReviewActivity" />
-        <activity android:name=".BuyerReviewActivity" />
-        <activity android:name=".PostActivity" />
+        <activity android:name=".message.MessageActivity"></activity>
+        <activity android:name=".review.SellerReviewActivity" />
+        <activity android:name=".review.BuyerReviewActivity" />
+        <activity android:name=".post.PostActivity" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".DetailActivity" />
+        <activity android:name=".detail.DetailActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

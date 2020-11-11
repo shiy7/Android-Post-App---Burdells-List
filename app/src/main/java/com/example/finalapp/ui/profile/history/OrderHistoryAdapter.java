@@ -5,25 +5,21 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.finalapp.BuyerReviewActivity;
-import com.example.finalapp.DetailActivity;
+import com.example.finalapp.review.BuyerReviewActivity;
+import com.example.finalapp.detail.DetailActivity;
 import com.example.finalapp.R;
-import com.example.finalapp.SellerReviewActivity;
+import com.example.finalapp.review.SellerReviewActivity;
 import com.example.finalapp.model.Order;
-import com.example.finalapp.model.Post;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,11 +29,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import static android.app.Activity.RESULT_OK;
-
 public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapter.ViewHolder>{
 
-    private Context mContext;
+    private final Context mContext;
     private List<Order> orderList;
 
     public OrderHistoryAdapter(Context mContext, List<Order> orderList) {
@@ -66,6 +60,7 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");
         holder.date.setText(dateFormat.format(order.getDate()));
 
+        // redirect to detail page for the post ordered
         holder.orderId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,18 +76,20 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
             }
         });
 
-
+        // get status based its role
         String strStatus;
         if (userId.equals(order.getBuyer())){
             strStatus = order.getBuyerStatus();
         } else {
             strStatus = order.getSellerStatus();
         }
-        holder.status.setText(strStatus);
+
         if (strStatus.equals("Done")){
             holder.status.setTextColor(R.color.gray);
-        }
+        } 
+        holder.status.setText(strStatus);
 
+        // check status
         holder.status.setOnClickListener(new View.OnClickListener() {
             @SuppressLint("ResourceAsColor")
             @Override
