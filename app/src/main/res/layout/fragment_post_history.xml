@@ -60,11 +60,7 @@
                     android:textSize="15sp"
                     android:maxLength="100" />
 
-<!--                <TextView-->
-<!--                    android:text="Post ID"-->
-<!--                    android:textSize="14sp"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content" />-->
+
             </LinearLayout>
 
             <TextView

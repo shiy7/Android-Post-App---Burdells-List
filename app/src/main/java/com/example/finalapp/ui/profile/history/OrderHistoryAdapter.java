@@ -86,7 +86,7 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
 
         if (strStatus.equals("Done")){
             holder.status.setTextColor(R.color.gray);
-        } 
+        }
         holder.status.setText(strStatus);
 
         // check status

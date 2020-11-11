@@ -77,7 +77,8 @@ public class BuyerReviewActivity extends AppCompatActivity {
                     assert reviewee != null;
                     assert orderId != null;
                     db.collection("reviews").document(reviewee)
-                            .collection(postid).document(orderId)
+                            .collection("postid").document(postid)
+                            .collection("orderid").document(orderId)
                             .set(review)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

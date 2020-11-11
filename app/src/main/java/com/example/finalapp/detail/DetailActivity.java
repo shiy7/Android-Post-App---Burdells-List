@@ -30,11 +30,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DetailActivity extends AppCompatActivity {
 
@@ -118,8 +121,12 @@ public class DetailActivity extends AppCompatActivity {
                     FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
                     assert firebaseUser != null;
                     String userId = firebaseUser.getUid();
+                    Map<String, Object> add = new HashMap<>();
+                    add.put("quantity", addAmount);
+                    add.put("postid", postid);
                     db.collection("shop").document(userId)
-                            .update(postid, FieldValue.increment(addAmount))
+                            .collection("posts").document(postid)
+                            .set(add, SetOptions.merge())
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
