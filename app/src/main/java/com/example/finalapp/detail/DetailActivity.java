@@ -56,6 +56,8 @@ public class DetailActivity extends AppCompatActivity {
     private Button chat;
     private String posterId;
 
+    private long postPrice;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +126,8 @@ public class DetailActivity extends AppCompatActivity {
                     Map<String, Object> add = new HashMap<>();
                     add.put("quantity", addAmount);
                     add.put("postid", postid);
+                    long totalPrice = postPrice*addAmount;
+                    add.put("totalPrice",totalPrice);
                     db.collection("shop").document(userId)
                             .collection("posts").document(postid)
                             .set(add, SetOptions.merge())
@@ -214,6 +218,8 @@ public class DetailActivity extends AppCompatActivity {
 
                         title.setText(post.getTitle());
                         price.setText("$ " + Double.toString(post.getPrice()));
+                        postPrice = post.getPrice();
+
                         detail.setText(post.getDetail().replaceAll("<br />", "\\n"));
                         @SuppressLint("SimpleDateFormat")
                         SimpleDateFormat dateFormat = new SimpleDateFormat("MM-dd-yyyy");

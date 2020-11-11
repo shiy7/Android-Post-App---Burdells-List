@@ -1,5 +1,6 @@
 package com.example.finalapp.ui.chat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -22,9 +23,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
@@ -52,7 +57,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         holder.userName.setText(user.getUsername());
         Glide.with(mContext).load(user.getImageurl()).into(holder.profileImage);
 
-        lastMessage(user.getId(), holder.lastMsg);
+        lastMessage(user.getId(), holder.lastMsg, holder.lastTime);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -75,7 +80,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         public TextView userName;
         public ImageView profileImage;
-        private TextView lastMsg;
+        private TextView lastMsg, lastTime;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -83,16 +88,18 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             userName = itemView.findViewById(R.id.userName);
             profileImage = itemView.findViewById(R.id.profileImage);
             lastMsg = itemView.findViewById(R.id.lastMsg);
+            lastTime = itemView.findViewById(R.id.lastMsgTime);
         }
     }
 
     // check last msg
-    private void lastMessage(final String userid, final TextView lastMsg){
-        lastmsg = "default";
+    private void lastMessage(final String userid, final TextView lastMsg, final TextView lastTime){
+        lastmsg = "";
+        final String lasttime = "";
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("chats")
-                .orderBy("date")
+                .orderBy("date", Query.Direction.DESCENDING)
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -101,15 +108,44 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                             if (chat.getSender().equals(firebaseUser.getUid()) && chat.getReceiver().equals(userid)
                                     || chat.getSender().equals(userid) && chat.getReceiver().equals(firebaseUser.getUid())) {
                                 lastmsg = chat.getMessage();
+                                setTime(chat.getDate().getTime(), new Date().getTime(), lastTime);
+                                break;
                             }
                         }
-                        if ("default".equals(lastmsg)) {
-                            lastMsg.setText("No Message");
-                        } else {
-                            lastMsg.setText(lastmsg);
-                        }
-                        lastmsg = "default";
+                        lastMsg.setText(lastmsg);
                     }
                 });
+    }
+
+    private void setTime(long ts1, long ts2, TextView timeText) {
+
+
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTimeInMillis(ts1);
+        cal2.setTimeInMillis(ts2);
+
+        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
+                cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+
+        boolean sameWeek = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH) &&
+                cal1.get(Calendar.WEEK_OF_MONTH) == cal2.get(Calendar.WEEK_OF_MONTH);
+
+        if (sameDay) {
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm a");
+            timeText.setText(dateFormat.format(ts1));
+        } else if (sameWeek) {
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat dateFormat = new SimpleDateFormat("E hh:mm a");
+            timeText.setText(dateFormat.format(ts1));
+        } else {
+            @SuppressLint("SimpleDateFormat")
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yy hh:mm a");
+            timeText.setText(dateFormat.format(ts1));
+        }
+
     }
 }

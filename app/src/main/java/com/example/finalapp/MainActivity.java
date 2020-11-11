@@ -90,13 +90,13 @@ public class MainActivity extends AppCompatActivity {
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if (!task.isSuccessful()) {
-//                                List<Fragment> list = getSupportFragmentManager().getFragments();
-//                                OrderHistoryFragment fragment = (OrderHistoryFragment) list.get(3);
-//                                fragment.update(position);
+                            if (task.isSuccessful()) {
+                                List<Fragment> list = getSupportFragmentManager().getFragments();
+                                OrderHistoryFragment fragment = (OrderHistoryFragment) list.get(3);
+                                fragment.updateBuyer(position);
+                            } else {
                                 Toast.makeText(MainActivity.this,
                                         "Fail to update order status", Toast.LENGTH_SHORT).show();
-
                             }
                         }
                     });
@@ -114,7 +114,11 @@ public class MainActivity extends AppCompatActivity {
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if (!task.isSuccessful()) {
+                            if (task.isSuccessful()) {
+                                List<Fragment> list = getSupportFragmentManager().getFragments();
+                                OrderHistoryFragment fragment = (OrderHistoryFragment) list.get(3);
+                                fragment.updateBuyer(position);
+                            } else {
                                 Toast.makeText(MainActivity.this,
                                         "Fail to update order status", Toast.LENGTH_SHORT).show();
                             }

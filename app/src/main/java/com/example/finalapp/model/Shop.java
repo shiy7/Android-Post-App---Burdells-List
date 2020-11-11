@@ -4,10 +4,12 @@ public class Shop {
 
     private String postid;
     private int quantity;
+    private long totalPrice;
 
-    public Shop(String postid, int quantity) {
+    public Shop(String postid, int quantity, long totalPrice) {
         this.postid = postid;
         this.quantity = quantity;
+        this.totalPrice = totalPrice;
     }
 
     public Shop() {
@@ -27,5 +29,13 @@ public class Shop {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public long getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(long totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

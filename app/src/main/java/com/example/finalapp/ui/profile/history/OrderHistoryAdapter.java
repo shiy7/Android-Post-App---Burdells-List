@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.finalapp.model.Post;
 import com.example.finalapp.review.BuyerReviewActivity;
 import com.example.finalapp.detail.DetailActivity;
 import com.example.finalapp.R;
@@ -24,6 +25,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -62,6 +64,37 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
 
         // redirect to detail page for the post ordered
         holder.orderId.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, DetailActivity.class);
+                intent.putExtra("postid", order.getPostid());
+                intent.putExtra("orderAmount", Integer.toString(order.getAmount()));
+                if (userId.equals(order.getBuyer())){
+                    intent.putExtra("contactId", order.getSeller());
+                } else {
+                    intent.putExtra("contactId", order.getBuyer());
+                }
+                mContext.startActivity(intent);
+            }
+        });
+
+
+        // set title
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("posts").document(order.getPostid())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()){
+                            Post post = task.getResult().toObject(Post.class);
+                            holder.title.setText(post.getTitle());
+                        }
+                    }
+                });
+
+        // title to redirect to detail
+        holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, DetailActivity.class);
@@ -188,7 +221,7 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView orderId, date, status;
+        private TextView orderId, date, status, title;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -196,6 +229,7 @@ public class OrderHistoryAdapter extends RecyclerView.Adapter<OrderHistoryAdapte
             date = itemView.findViewById(R.id.orderHisDate);
             orderId = itemView.findViewById(R.id.orderHisID);
             status = itemView.findViewById(R.id.orderHisStatus);
+            title = itemView.findViewById(R.id.orderHisTitle);
         }
     }
 }

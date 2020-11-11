@@ -71,6 +71,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
         final Shop shop = mShop.get(position);
         final FirebaseFirestore db = FirebaseFirestore.getInstance();
         final int[] maxAmount = new int[1];
+        final long[] price = new long[1];
 
         db.collection("posts").document(shop.getPostid())
                 .get()
@@ -83,14 +84,17 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
                                 Glide.with(mContext).load(post.getImages().get(0)).into(holder.postImageShopping);
                             }
                             holder.postTitleShopping.setText(post.getTitle());
-                            holder.priceShopping.setText("$ " + Double.toString(post.getPrice()));
                             maxAmount[0] = post.getAmount();
+                            price[0] = post.getPrice();
                         }
                     }
                 });
 
         // set the quantity of the textView
         holder.updateQuantityValue.setText(Integer.toString(shop.getQuantity()));
+
+        // set total price
+        holder.priceShopping.setText("$ " + Double.toString(shop.getTotalPrice()));
 
         // remove item from shopping cart when button removeFromShoppingList is clicked
         holder.removeFromShoppingList.setOnClickListener(new View.OnClickListener() {
@@ -121,6 +125,7 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
             public void onClick(View v) {
                 Intent intent = new Intent(mContext, DetailActivity.class);
                 intent.putExtra("postid", shop.getPostid());
+                intent.putExtra("orderAmount", Integer.toString(shop.getQuantity()));
                 mContext.startActivity(intent);
             }
         });
@@ -147,7 +152,11 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
                                     // Display the quantity in the textView
                                     int quantity = Integer.parseInt(holder.updateQuantityValue.getText().toString());
                                     quantity--;
-                                    holder.updateQuantityValue.setText(Integer.toString(quantity));
+                                    shop.setQuantity(quantity);
+                                    long totalPrice = price[0]*quantity;
+                                    holder.priceShopping.setText(Long.toString(totalPrice));
+                                    shop.setTotalPrice(totalPrice);
+                                    notifyItemChanged(position);
 
                                 }
                             })
@@ -185,7 +194,11 @@ public class ShopAdapter extends RecyclerView.Adapter<ShopAdapter.ViewHolder> {
                                     // Display the quantity in the textView
                                     int quantity = Integer.parseInt(holder.updateQuantityValue.getText().toString());
                                     quantity++;
-                                    holder.updateQuantityValue.setText(Integer.toString(quantity));
+                                    shop.setQuantity(quantity);
+                                    long totalPrice = price[0]*quantity;
+                                    holder.priceShopping.setText(Long.toString(totalPrice));
+                                    shop.setTotalPrice(totalPrice);
+                                    notifyItemChanged(position);
 
                                 }
                             })

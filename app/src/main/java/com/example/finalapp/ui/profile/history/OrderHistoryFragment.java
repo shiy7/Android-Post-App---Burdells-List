@@ -105,12 +105,13 @@ public class OrderHistoryFragment extends Fragment {
 
     private void readOrder(Query query) {
         query.orderBy("date")
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        if (value != null){
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
                             orderList.clear();
-                            for (QueryDocumentSnapshot document : value) {
+                            for (QueryDocumentSnapshot document : task.getResult()){
                                 Order order = document.toObject(Order.class);
                                 orderList.add(order);
                             }
@@ -120,7 +121,15 @@ public class OrderHistoryFragment extends Fragment {
                 });
     }
 
-    public void update(int position){
+    public void updateBuyer(int position){
+        Order order = orderList.get(position);
+        order.setBuyerStatus("Done");
+        orderHistoryAdapter.notifyItemChanged(position);
+    }
+
+    public void updateSeller(int position){
+        Order order = orderList.get(position);
+        order.setSellerStatus("Done");
         orderHistoryAdapter.notifyItemChanged(position);
     }
 }

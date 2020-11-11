@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
@@ -124,36 +126,47 @@ public class ShopFragment extends Fragment {
                                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                     if (task.isSuccessful()){
                                         Post post = task.getResult().toObject(Post.class);
+                                        int available = post.getAmount();
 
-                                        // create order
-                                        Map<String, Object> map = new HashMap<>();
-                                        map.put("amount", shop.getQuantity());
-                                        if (post.getType().equals("Require")){
-                                            map.put("buyer",  firebaseUser.getUid());
-                                            map.put("seller", post.getPoster());
+                                        if (available < shop.getQuantity()){
+                                            AlertDialog.Builder shortcut = new AlertDialog.Builder(getContext());
+                                            shortcut.setMessage("The required amount is not available");
+                                            AlertDialog alert = shortcut.create();
+                                            alert.show();
                                         } else {
-                                            map.put("seller",  firebaseUser.getUid());
-                                            map.put("buyer", post.getPoster());
-                                        }
-                                        map.put("buyerStatus", "Received ?");
-                                        map.put("sellerStatus", "Get Paid ?");
-                                        DocumentReference reference = db.collection("orders").document();
-                                        map.put("id", reference.getId());
-                                        map.put("postid", shop.getPostid());
-                                        map.put("date", new Date());
-                                        reference.set(map)
-                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        if (task.isSuccessful()){
-                                                            removeFromCart(position, shop.getPostid());
-                                                        } else {
-                                                            Toast.makeText(getContext(),
-                                                                    "Fail to submit order",
-                                                                    Toast.LENGTH_SHORT).show();
+                                            // create order
+                                            Map<String, Object> map = new HashMap<>();
+                                            map.put("amount", shop.getQuantity());
+                                            if (post.getType().equals("Require")){
+                                                map.put("buyer",  firebaseUser.getUid());
+                                                map.put("seller", post.getPoster());
+                                            } else {
+                                                map.put("seller",  firebaseUser.getUid());
+                                                map.put("buyer", post.getPoster());
+                                            }
+                                            map.put("buyerStatus", "Received ?");
+                                            map.put("sellerStatus", "Get Paid ?");
+                                            DocumentReference reference = db.collection("orders").document();
+                                            map.put("id", reference.getId());
+                                            map.put("postid", shop.getPostid());
+                                            map.put("totalPrice", shop.getTotalPrice());
+                                            map.put("date", new Date());
+                                            reference.set(map)
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()){
+                                                                removeFromCart(position, shop.getPostid());
+                                                                updatePostAmount(shop.getPostid(),shop.getQuantity());
+                                                            } else {
+                                                                Toast.makeText(getContext(),
+                                                                        "Fail to submit order",
+                                                                        Toast.LENGTH_SHORT).show();
+                                                            }
                                                         }
-                                                    }
-                                                });
+                                                    });
+                                        }
+
 
                                     } else {
                                         Toast.makeText(getContext(), "Fail to submit order",
@@ -182,6 +195,21 @@ public class ShopFragment extends Fragment {
                     public void onComplete(@NonNull Task<Void> task) {
                         shopList.remove(position);
                         shopAdapter.notifyItemChanged(position);
+                    }
+                });
+    }
+
+
+    // update post amount
+    private void updatePostAmount(final String postid, int quantity){
+        db.collection("posts").document(postid)
+                .update("amount", FieldValue.increment(-quantity))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (!task.isSuccessful()){
+
+                        }
                     }
                 });
     }

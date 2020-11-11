@@ -86,6 +86,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     Map<String, Object> add = new HashMap<>();
                     add.put("quantity", 1);
                     add.put("postid", post.getPostid());
+                    add.put("totalPrice", post.getPrice());
                     db.collection("shop").document(firebaseUser.getUid())
                             .collection("posts").document(post.getPostid())
                             .set(add, SetOptions.merge())
