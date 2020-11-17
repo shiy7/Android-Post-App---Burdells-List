@@ -88,8 +88,6 @@ public class MessageActivity extends AppCompatActivity {
         receiverInfo(receiverId);
 
 
-
-
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -146,6 +144,7 @@ public class MessageActivity extends AppCompatActivity {
         infor.put("receiver", receiver);
         infor.put("message", message);
         infor.put("date", new Date());
+        infor.put("seen", false);
 
         db.collection("chats").document()
                 .set(infor)
@@ -173,6 +172,9 @@ public class MessageActivity extends AppCompatActivity {
                             Chat chat = snapshot.toObject(Chat.class);
                             if (chat.getSender().equals(userId) && chat.getReceiver().equals(partnerId)
                                     || chat.getSender().equals(partnerId) && chat.getReceiver().equals(userId)) {
+                                if (!chat.getSeen() && chat.getReceiver().equals(userId)){
+                                    snapshot.getReference().update("seen", true);
+                                }
                                 mChat.add(chat);
                             }
                             messageAdapter = new MessageAdapter(MessageActivity.this, mChat, imageurl);
@@ -181,28 +183,5 @@ public class MessageActivity extends AppCompatActivity {
 
                     }
                 });
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            mChat.clear();
-//                            QuerySnapshot documentSnapshot = task.getResult();
-//                            assert documentSnapshot != null;
-//                            for (QueryDocumentSnapshot snapshot : documentSnapshot) {
-//                                Chat chat = snapshot.toObject(Chat.class);
-//                                if (chat.getSender().equals(userId) && chat.getReceiver().equals(partnerId)
-//                                        || chat.getSender().equals(partnerId) && chat.getReceiver().equals(userId)) {
-//                                    mChat.add(chat);
-//                                }
-//
-//                                messageAdapter = new MessageAdapter(MessageActivity.this, mChat, imageurl);
-//                                recyclerView.setAdapter(messageAdapter);
-//                            }
-//                        } else {
-//                            Toast.makeText(MessageActivity.this, "Error to get message", Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-
     }
 }
