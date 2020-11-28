@@ -119,61 +119,64 @@ public class ShopFragment extends Fragment {
                 for (int i = 0; i < shopList.size(); i++){
                     final Shop shop = shopList.get(i);
                     final int position = i;
-                    db.collection("posts").document(shop.getPostid())
-                            .get()
-                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()){
-                                        Post post = task.getResult().toObject(Post.class);
-                                        int available = post.getAmount();
+                    if (shop.getQuantity() > 0){
+                        db.collection("posts").document(shop.getPostid())
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()){
+                                            Post post = task.getResult().toObject(Post.class);
+                                            int available = post.getAmount();
 
-                                        if (available < shop.getQuantity()){
-                                            AlertDialog.Builder shortcut = new AlertDialog.Builder(getContext());
-                                            shortcut.setMessage("The required amount is not available");
-                                            AlertDialog alert = shortcut.create();
-                                            alert.show();
-                                        } else {
-                                            // create order
-                                            Map<String, Object> map = new HashMap<>();
-                                            map.put("amount", shop.getQuantity());
-                                            if (post.getType().equals("Require")){
-                                                map.put("buyer",  firebaseUser.getUid());
-                                                map.put("seller", post.getPoster());
+                                            if (available < shop.getQuantity()){
+                                                AlertDialog.Builder shortcut = new AlertDialog.Builder(getContext());
+                                                shortcut.setMessage("The required amount is not available");
+                                                AlertDialog alert = shortcut.create();
+                                                alert.show();
                                             } else {
-                                                map.put("seller",  firebaseUser.getUid());
-                                                map.put("buyer", post.getPoster());
-                                            }
-                                            map.put("buyerStatus", "Received ?");
-                                            map.put("sellerStatus", "Get Paid ?");
-                                            DocumentReference reference = db.collection("orders").document();
-                                            map.put("id", reference.getId());
-                                            map.put("postid", shop.getPostid());
-                                            map.put("totalPrice", shop.getTotalPrice());
-                                            map.put("date", new Date());
-                                            reference.set(map)
-                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                        @Override
-                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                            if (task.isSuccessful()){
-                                                                removeFromCart(position, shop.getPostid());
-                                                                updatePostAmount(shop.getPostid(),shop.getQuantity());
-                                                            } else {
-                                                                Toast.makeText(getContext(),
-                                                                        "Fail to submit order",
-                                                                        Toast.LENGTH_SHORT).show();
+                                                // create order
+                                                Map<String, Object> map = new HashMap<>();
+                                                map.put("amount", shop.getQuantity());
+                                                if (post.getType().equals("Service")){
+                                                    map.put("buyer",  firebaseUser.getUid());
+                                                    map.put("seller", post.getPoster());
+                                                } else {
+                                                    map.put("seller",  firebaseUser.getUid());
+                                                    map.put("buyer", post.getPoster());
+                                                }
+                                                map.put("buyerStatus", "Received ?");
+                                                map.put("sellerStatus", "Get Paid ?");
+                                                DocumentReference reference = db.collection("orders").document();
+                                                map.put("id", reference.getId());
+                                                map.put("postid", shop.getPostid());
+                                                map.put("totalPrice", shop.getTotalPrice());
+                                                map.put("date", new Date());
+                                                reference.set(map)
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()){
+                                                                    removeFromCart(position, shop.getPostid());
+                                                                    updatePostAmount(shop.getPostid(),shop.getQuantity());
+                                                                } else {
+                                                                    Toast.makeText(getContext(),
+                                                                            "Fail to submit order",
+                                                                            Toast.LENGTH_SHORT).show();
+                                                                }
                                                             }
-                                                        }
-                                                    });
+                                                        });
+                                            }
+
+
+                                        } else {
+                                            Toast.makeText(getContext(), "Fail to submit order",
+                                                    Toast.LENGTH_SHORT).show();
                                         }
-
-
-                                    } else {
-                                        Toast.makeText(getContext(), "Fail to submit order",
-                                                Toast.LENGTH_SHORT).show();
                                     }
-                                }
-                            });
+                                });
+                    }
+
 
 
 
