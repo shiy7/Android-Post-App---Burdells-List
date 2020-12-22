@@ -57,7 +57,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         holder.userName.setText(user.getUsername());
         Glide.with(mContext).load(user.getImageurl()).into(holder.profileImage);
 
-        lastMessage(user.getId(), holder.lastMsg, holder.lastTime);
+        lastMessage(user.getId(), holder.lastMsg, holder.lastTime, holder.lastseen);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +79,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public TextView userName;
-        public ImageView profileImage;
+        public ImageView profileImage, lastseen;
         private TextView lastMsg, lastTime;
 
         public ViewHolder(@NonNull View itemView) {
@@ -89,11 +89,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             profileImage = itemView.findViewById(R.id.profileImage);
             lastMsg = itemView.findViewById(R.id.lastMsg);
             lastTime = itemView.findViewById(R.id.lastMsgTime);
+            lastseen = itemView.findViewById(R.id.seeMessage);
         }
     }
 
     // check last msg
-    private void lastMessage(final String userid, final TextView lastMsg, final TextView lastTime){
+    private void lastMessage(final String userid, final TextView lastMsg, final TextView lastTime, final ImageView lastseen){
         lastmsg = "";
         final String lasttime = "";
         final FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -109,6 +110,9 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                                     || chat.getSender().equals(userid) && chat.getReceiver().equals(firebaseUser.getUid())) {
                                 lastmsg = chat.getMessage();
                                 setTime(chat.getDate().getTime(), new Date().getTime(), lastTime);
+                                if (!chat.getSeen() && chat.getReceiver().equals(firebaseUser.getUid())){
+                                    lastseen.setVisibility(View.VISIBLE);
+                                }
                                 break;
                             }
                         }

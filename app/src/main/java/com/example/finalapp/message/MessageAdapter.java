@@ -17,6 +17,7 @@ import com.example.finalapp.R;
 import com.example.finalapp.model.Chat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -57,7 +58,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         Chat chat = mChat.get(position);
 
         holder.showMessage.setText(chat.getMessage());
-//        holder.showTime.setText(chat.getDate());
+
 
         Glide.with(mContext).load(imageurl).into(holder.profileImage);
 

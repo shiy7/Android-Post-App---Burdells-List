@@ -21,7 +21,7 @@
             android:textColor="@color/text_black"
             android:layout_marginStart="5dp"
             android:maxLines="1"
-            android:maxLength="100"
+            android:maxLength="50"
             android:textStyle="bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -45,7 +45,7 @@
         android:layout_weight="25"
         android:textAlignment="center"
         android:textColor="@color/text_black"
-        android:textSize="16sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/orderHisStatus"
@@ -55,7 +55,7 @@
         android:layout_weight="28"
         android:textAlignment="center"
         android:textColor="@color/colorPrimary"
-        android:textSize="18sp" />
+        android:textSize="14sp" />
 
 
 </LinearLayout>
